@@ -68,3 +68,11 @@ variable "cloudflare_zone_id" {
 variable "cloudflare_record_name" {
     type = string
 }
+
+variable "cloudflare_origin_cert" {
+    type = string
+}
+
+variable "cloudflare_origin_key" {
+    type = string
+}
