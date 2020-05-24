@@ -125,7 +125,7 @@ resource "kubernetes_secret" "blog-cloudflare-origin" {
     }
 
     data = {
-        "tls.cert" = var.cloudflare_origin_cert
+        "tls.crt" = var.cloudflare_origin_cert
         "tls.key"  = var.cloudflare_origin_key
     }
 
