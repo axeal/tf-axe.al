@@ -37,7 +37,7 @@ provider "kubernetes" {
 }
 
 resource "kubernetes_namespace" "blog" {
-    metdata {
+    metadata {
         name = "blog"
     }
 }
