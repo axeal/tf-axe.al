@@ -76,7 +76,7 @@ resource "kubernetes_role_binding" "blog-deployment-rolebinding" {
     subject {
         kind      = "ServiceAccount"
         name      = "blog-deployment-sa"
-        namespace = "blog-deployment"
+        namespace = "blog"
     }
 }
 
