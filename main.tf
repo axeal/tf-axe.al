@@ -109,7 +109,7 @@ resource "kubernetes_deployment" "blog" {
                     image = "axeal/axe.al:latest"
                     name = "axeal"
                     port {
-                        container_port = 80
+                        container_port = 8080
                         protocol = "TCP"
                     }
                 }
@@ -143,7 +143,7 @@ resource "kubernetes_service" "blog" {
         }
         port {
             port        = 80
-            target_port = 80
+            target_port = 8080
             protocol    = "TCP"
         }
     }
