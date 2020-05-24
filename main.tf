@@ -58,7 +58,7 @@ resource "kubernetes_role" "blog-deployment-role" {
     rule {
         api_groups      = ["apps"]
         resources       = ["deployments"]
-        verbs           = ["get", "create", "update", "delete"]
+        verbs           = ["get", "create", "update", "delete", "patch"]
         resource_names  = ["blog"]
     }
 }
