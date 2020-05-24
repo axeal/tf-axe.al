@@ -20,7 +20,7 @@ resource "scaleway_k8s_cluster_beta" "k8s-cluster" {
 }
 
 resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
-  cluster_id = scaleway_k8s_cluster_beta.k8s-pool-0.id
+  cluster_id = scaleway_k8s_cluster_beta.k8s-cluster.id
   name = var.scaleway_pool_name
   node_type = var.scaleway_node_type
   size = var.scaleway_pool_size
@@ -29,7 +29,7 @@ resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
 resource "cloudflare_record" "cluster-dns" {
   zone_id = var.cloudflare_zone_id
   name    = var.cloudflare_record_name
-  value   = scaleway_k8s_cluster_beta.k8s-pool-0.nodes[0].public_ip
+  value   = scaleway_k8s_pool_beta.k8s-pool-0.nodes[0].public_ip
   type    = "A"
   proxied = true
 }
