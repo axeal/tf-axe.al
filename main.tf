@@ -121,7 +121,8 @@ resource "kubernetes_deployment" "blog" {
 
 resource "kubernetes_secret" "blog-cloudflare-origin" {
     metadata {
-        name = "axeal-tls"
+        name      = "axeal-tls"
+        namespace = "blog"
     }
 
     data = {
