@@ -47,6 +47,11 @@ variable "scaleway_ingress" {
     default = "nginx"
 }
 
+variable "scaleway_admission_plugins" {
+    type = list(string)
+    default = []
+}
+
 variable "scaleway_pool_name" {
     type = string
 }

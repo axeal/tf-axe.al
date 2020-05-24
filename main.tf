@@ -17,6 +17,7 @@ resource "scaleway_k8s_cluster_beta" "k8s-cluster" {
   version = var.scaleway_k8s_version
   cni = var.scaleway_cni
   ingress = var.scaleway_ingress
+  admission_plugins = var.scaleway_admission_plugins
 }
 
 resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
