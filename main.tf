@@ -37,7 +37,9 @@ provider "kubernetes" {
 }
 
 resource "kubernetes_namespace" "blog" {
-    name = "blog"
+    metdata {
+        name = "blog"
+    }
 }
 
 resource "kubernetes_service_account" "blog-deployment-sa" {
