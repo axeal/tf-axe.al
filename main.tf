@@ -25,11 +25,3 @@ resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
   node_type = var.scaleway_node_type
   size = var.scaleway_pool_size
 }
-
-resource "cloudflare_record" "cluster-dns" {
-  zone_id = var.cloudflare_zone_id
-  name    = var.cloudflare_record_name
-  value   = scaleway_k8s_pool_beta.k8s-pool-0.nodes[0].public_ip
-  type    = "A"
-  proxied = true
-}
