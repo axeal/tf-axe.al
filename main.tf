@@ -1,3 +1,13 @@
+terraform {
+    backend "remote" {
+        organization = "axeal"
+
+        workspaces {
+            name = "tf-axeal"
+        }
+    }
+}
+
 provider "scaleway" {
   access_key      = var.scaleway_access_key
   secret_key      = var.scaleway_secret_key
