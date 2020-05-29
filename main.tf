@@ -127,7 +127,7 @@ resource "helm_release" "prometheus-operator" {
   }
 }
 
-resource "kubernetes_namespace" "prometheus" {
+resource "kubernetes_namespace" "elastic" {
   metadata {
     name = "elastic"
   }
