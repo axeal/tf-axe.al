@@ -100,7 +100,8 @@ resource "kubernetes_namespace" "prometheus" {
 }
 
 resource "helm_release" "prometheus-operator" {
-  name      = "prometheus-operator"
-  chart     = "stable/prometheus-operator"
-  namespace = "prometheus"
+  name                   = "prometheus-operator"
+  chart                  = "stable/prometheus-operator"
+  namespace              = "prometheus"
+  repository_config_path = "${path.module}/helm-repositories.yaml"
 }
