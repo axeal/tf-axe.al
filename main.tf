@@ -71,6 +71,16 @@ provider "kustomization" {
   kubeconfig_raw = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].config_file
 }
 
+data "kustomization" "psps" {
+  path = "manifests/psp"
+}
+
+resource "kustomization_resource" "psps" {
+  for_each = data.kustomization.psps.ids
+
+  manifest = data.kustomization.psps.manifests[each.value]
+}
+
 data "kustomization" "blog" {
   path = "manifests/blog/base"
 }
@@ -133,12 +143,22 @@ resource "kubernetes_namespace" "elastic" {
   }
 }
 
+data "kustomization" "elasticsearch" {
+  path = "manifests/elastic/base"
+}
+
+resource "kustomization_resource" "elasticsearch" {
+  for_each = data.kustomization.elasticsearch.ids
+
+  manifest = data.kustomization.elasticsearch.manifests[each.value]
+}
+
 resource "helm_release" "elasticsearch" {
   name       = "elasticsearch"
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
   version    = var.elastic_version
-  namespace  = "elastic"
+  namespace  = "elastic"  
 }
 
 resource "helm_release" "logstash" {
