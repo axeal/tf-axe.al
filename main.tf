@@ -53,7 +53,6 @@ resource "kubernetes_namespace" "blog" {
   }
 }
 
-
 resource "kubernetes_secret" "blog-cloudflare-origin" {
   metadata {
     name      = "blog-tls"
@@ -94,7 +93,14 @@ provider "helm" {
   }
 }
 
+resource "kubernetes_namespace" "blog" {
+  metadata {
+    name = "prometheus"
+  }
+}
+
 resource "helm_release" "prometheus-operator" {
-  name  = "prometheus-operator"
-  chart = "stable/prometheus-operator"
+  name      = "prometheus-operator"
+  chart     = "stable/prometheus-operator"
+  namespace = "prometheus"
 }
