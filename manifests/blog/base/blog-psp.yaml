@@ -46,7 +46,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: blog-psp
-  namespace: blog
 rules:
 - apiGroups: ['policy']
   resources: ['podsecuritypolicies']
@@ -59,7 +58,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: blog-psp
-  namespace: blog
 roleRef:
   kind: Role
   name: blog-psp
