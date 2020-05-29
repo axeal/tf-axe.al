@@ -81,3 +81,7 @@ variable "cloudflare_origin_cert" {
 variable "cloudflare_origin_key" {
   type = string
 }
+
+variable "prometheus_operator_version" {
+  type = string
+}

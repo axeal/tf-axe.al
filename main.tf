@@ -82,7 +82,6 @@ resource "kustomization_resource" "blog" {
 }
 
 provider "helm" {
-  repository_config_path = "${path.module}/helm-repositories.yaml"
   kubernetes {
     load_config_file = "false"
 
@@ -101,7 +100,29 @@ resource "kubernetes_namespace" "prometheus" {
 }
 
 resource "helm_release" "prometheus-operator" {
-  name                   = "prometheus-operator"
-  chart                  = "stable/prometheus-operator"
-  namespace              = "prometheus"  
+  name       = "prometheus-operator"
+  repository = "https://kubernetes-charts.storage.googleapis.com"
+  chart      = "stable/prometheus-operator"
+  version    = var.prometheus_operator_version
+  namespace  = "prometheus"
+
+  set {
+    name  = "kubeEtcd.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "kubeProxy.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "kubeScheduler.enabled"
+    value = "false"
+  }
+
+  set {
+    name  = "kubeControllerManager.enabled"
+    value = "false"
+  }
 }
