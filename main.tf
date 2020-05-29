@@ -43,9 +43,8 @@ resource "local_file" "tls-crt" {
 }
 
 resource "local_file" "tls-key" {
-  content           = var.cloudflare_origin_key
+  sensitive_content = var.cloudflare_origin_key
   filename          = "${path.module}/manifests/blog/base/secrets/tls.key"
-  sensitive_content = true
 }
 
 provider "kustomization" {
