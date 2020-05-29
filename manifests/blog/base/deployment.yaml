@@ -18,6 +18,7 @@ spec:
       - name: tmp
         emptyDir:
           medium: Memory
+      automountServiceAccountToken: false
       securityContext:
         runAsUser: 101
         runAsGroup: 101
