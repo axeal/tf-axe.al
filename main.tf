@@ -126,3 +126,41 @@ resource "helm_release" "prometheus-operator" {
     value = "false"
   }
 }
+
+resource "kubernetes_namespace" "prometheus" {
+  metadata {
+    name = "elastic"
+  }
+}
+
+resource "helm_release" "elasticsearch" {
+  name       = "elasticsearch"
+  repository = "https://helm.elastic.co"
+  chart      = "elasticsearch"
+  version    = var.elastic_version
+  namespace  = "elastic"
+}
+
+resource "helm_release" "logstash" {
+  name       = "logstash"
+  repository = "https://helm.elastic.co"
+  chart      = "logstash"
+  version    = var.elastic_version
+  namespace  = "elastic"
+}
+
+resource "helm_release" "filebeat" {
+  name       = "filebeat"
+  repository = "https://helm.elastic.co"
+  chart      = "filebeat"
+  version    = var.elastic_version
+  namespace  = "elastic"
+}
+
+resource "helm_release" "kibana" {
+  name       = "kibana"
+  repository = "https://helm.elastic.co"
+  chart      = "kibana"
+  version    = var.elastic_version
+  namespace  = "elastic"
+}

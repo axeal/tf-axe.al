@@ -85,3 +85,7 @@ variable "cloudflare_origin_key" {
 variable "prometheus_operator_version" {
   type = string
 }
+
+variable "elastic_version" {
+  type = string
+}
