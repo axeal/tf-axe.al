@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: blog
+spec:
+  tls:
+  - hosts:
+      - axe.al
+    secretName: blog-tls
+  rules:
+  - host: axe.al
+    http:
+      paths:
+      - backend:
+          serviceName: blog
+          servicePort: 8080
