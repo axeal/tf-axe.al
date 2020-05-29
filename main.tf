@@ -37,14 +37,35 @@ resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
   size       = var.scaleway_pool_size
 }
 
-resource "local_file" "tls-crt" {
-  content  = var.cloudflare_origin_cert
-  filename = "${path.module}/manifests/blog/base/secrets/tls.crt"
+provider "kubernetes" {
+  load_config_file = "false"
+
+  host  = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].host
+  token = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].token
+  cluster_ca_certificate = base64decode(
+    scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].cluster_ca_certificate
+  )
 }
 
-resource "local_file" "tls-key" {
-  sensitive_content = var.cloudflare_origin_key
-  filename          = "${path.module}/manifests/blog/base/secrets/tls.key"
+resource "kubernetes_namespace" "blog" {
+  metadata {
+    name = "blog"
+  }
+}
+
+
+resource "kubernetes_secret" "blog-cloudflare-origin" {
+  metadata {
+    name      = "blog-tls"
+    namespace = "blog"
+  }
+
+  data = {
+    "tls.crt" = var.cloudflare_origin_cert
+    "tls.key" = var.cloudflare_origin_key
+  }
+
+  type = "kubernetes.io/tls"
 }
 
 provider "kustomization" {
