@@ -93,7 +93,7 @@ provider "helm" {
   }
 }
 
-resource "kubernetes_namespace" "blog" {
+resource "kubernetes_namespace" "prometheus" {
   metadata {
     name = "prometheus"
   }
