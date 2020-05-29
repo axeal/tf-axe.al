@@ -102,7 +102,7 @@ resource "kubernetes_namespace" "prometheus" {
 resource "helm_release" "prometheus-operator" {
   name       = "prometheus-operator"
   repository = "https://kubernetes-charts.storage.googleapis.com"
-  chart      = "stable/prometheus-operator"
+  chart      = "prometheus-operator"
   version    = var.prometheus_operator_version
   namespace  = "prometheus"
 
