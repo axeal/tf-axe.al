@@ -16,7 +16,8 @@ spec:
   requiredDropCapabilities:
     - ALL
   # Disallow all volumes
-  volumes: []
+  volumes:
+  - emptyDir
   hostNetwork: false
   hostIPC: false
   hostPID: false
