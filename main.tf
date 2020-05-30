@@ -227,15 +227,6 @@ resource "helm_release" "logstash" {
   }
 }
 
-resource "helm_release" "filebeat" {
-  name       = "filebeat"
-  repository = "https://helm.elastic.co"
-  chart      = "filebeat"
-  version    = var.elastic_version
-  namespace  = "elastic"
-  wait       = false
-}
-
 resource "helm_release" "kibana" {
   name       = "kibana"
   repository = "https://helm.elastic.co"
@@ -243,18 +234,4 @@ resource "helm_release" "kibana" {
   version    = var.elastic_version
   namespace  = "elastic"
   wait       = false
-}
-
-resource "helm_release" "fluentd" {
-  name       = "fluentd"
-  repository = "https://kubernetes-charts.storage.googleapis.com"
-  chart      = "fluentd"
-  version    = var.fluentd_version
-  namespace  = "elastic"
-  wait       = false
-
-  set {
-    name  = "output.port"
-    value = "elasticsearch-master.elastic.svc.cluster.local"
-  }
 }
