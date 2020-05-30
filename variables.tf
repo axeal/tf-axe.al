@@ -99,3 +99,7 @@ variable "elasticsearch_minimum_master_nodes" {
   type    = number
   default = 1
 }
+
+variable "fluentd_version" {
+  type = string
+}
