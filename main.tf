@@ -167,6 +167,51 @@ resource "helm_release" "logstash" {
   chart      = "logstash"
   version    = var.elastic_version
   namespace  = "elastic"
+
+  set {
+    name  = "service.type"
+    value = "ClusterIP"
+  }
+
+  set {
+    name  = "service.ports[0].name"
+    value = "beats"
+  }
+
+  set {
+    name  = "service.ports[0].port"
+    value = "5044"
+  }
+
+  set {
+    name  = "service.ports[0].protocol"
+    value = "TCP"
+  }
+
+  set {
+    name  = "service.ports[0].targetPort"
+    value = "50444"
+  }
+
+  set {
+    name  = "service.ports[1].name"
+    value = "http"
+  }
+
+  set {
+    name  = "service.ports[1].port"
+    value = "8080"
+  }
+
+  set {
+    name  = "service.ports[1].protocol"
+    value = "TCP"
+  }
+
+  set {
+    name  = "service.ports[1].targetPort"
+    value = "8080"
+  }
 }
 
 resource "helm_release" "filebeat" {
