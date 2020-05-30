@@ -235,3 +235,13 @@ resource "helm_release" "kibana" {
   namespace  = "elastic"
   wait       = false
 }
+
+data "kustomization" "fluentd" {
+  path = "manifests/fluentd/base"
+}
+
+resource "kustomization_resource" "fluentd" {
+  for_each = data.kustomization.fluentd.ids
+
+  manifest = data.kustomization.fluentd.manifests[each.value]
+}
