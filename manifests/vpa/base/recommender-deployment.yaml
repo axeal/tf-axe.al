@@ -28,6 +28,9 @@ spec:
       - name: recommender
         image: us.gcr.io/k8s-artifacts-prod/autoscaling/vpa-recommender:0.8.0
         imagePullPolicy: Always
+        args:
+        - --storage=prometheus
+        - --prometheus-address=http://prometheus-operator-prometheus.prometheus.svc.cluster.local:9090
         resources:
           limits:
             cpu: 200m
