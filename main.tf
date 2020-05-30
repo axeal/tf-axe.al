@@ -245,3 +245,84 @@ resource "kustomization_resource" "fluentd" {
 
   manifest = data.kustomization.fluentd.manifests[each.value]
 }
+
+resource "tls_private_key" "vpa_webhook_ca" {
+  algorithm = var.vpa_webhook_ca_key_algorithm
+}
+
+resource "tls_self_signed_cert" "vpa_webhook_ca" {
+  key_algorithm   = tls_private_key.vpa_webhook_ca.algorithm
+  private_key_pem = tls_private_key.vpa_webhook_ca.private_key_pem
+
+  subject {
+    common_name = "vpa_webhook_ca"
+  }
+
+  validity_period_hours = var.vpa_webhook_ca_cert_validity_period
+  is_ca_certificate     = true
+
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+    "client_auth",
+    "cert_signing"
+  ]
+}
+
+resource "tls_private_key" "vpa_webhook_server" {
+  algorithm = var.vpa_webhook_server_key_algorithm
+}
+
+resource "tls_cert_request" "vpa_webhook_server" {
+  key_algorithm   = tls_private_key.vpa_webhook_server.algorithm
+  private_key_pem = tls_private_key.vpa_webhook_server.private_key_pem
+
+  subject {
+    common_name = "vpa-webhook.kube-system.svc"
+  }
+}
+
+resource "tls_locally_signed_cert" "vpa_webhook_server" {
+  cert_request_pem = tls_cert_request.vpa_webhook_server.cert_request_pem
+
+  ca_key_algorithm   = tls_private_key.vpa_webhook_ca.algorithm
+  ca_private_key_pem = tls_private_key.vpa_webhook_ca.private_key_pem
+  ca_cert_pem        = tls_self_signed_cert.vpa_webhook_ca.cert_pem
+
+  validity_period_hours = var.vpa_webhook_server_cert_validity_period
+
+  allowed_uses = [
+    "content_commitment",
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+    "client_auth"
+  ]
+}
+
+resource "kubernetes_secret" "vpa-tls-certs" {
+  metadata {
+    name      = "vpa-tls-certs"
+    namespace = "kube-system"
+  }
+
+  data = {
+    "caKey.pem"      = tls_private_key.vpa_webhook_ca.private_key_pem
+    "caCert.pem"     = tls_self_signed_cert.vpa_webhook_ca.cert_pem
+    "serverKey.pem"  = tls_private_key.vpa_webhook_server.private_key_pem
+    "serverCert.pem" = tls_locally_signed_cert.vpa_webhook_server.cert_pem
+  }
+
+  type = "Opaque"
+}
+
+data "kustomization" "vpa" {
+  path = "manifests/vpa/base"
+}
+
+resource "kustomization_resource" "vpa" {
+  for_each = data.kustomization.vpa.ids
+
+  manifest = data.kustomization.vpa.manifests[each.value]
+}

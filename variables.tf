@@ -99,3 +99,23 @@ variable "elasticsearch_minimum_master_nodes" {
   type    = number
   default = 1
 }
+
+variable "vpa_webhook_ca_key_algorithm" {
+  type    = string
+  default = "RSA"
+}
+
+variable "vpa_webhook_server_key_algorithm" {
+  type    = string
+  default = "RSA"
+}
+
+variable "vpa_webhook_ca_cert_validity_period" {
+  type    = number
+  default = 8760
+}
+
+variable "vpa_webhook_server_cert_validity_period" {
+  type    = number
+  default = 8760
+}
