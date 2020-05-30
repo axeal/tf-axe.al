@@ -115,6 +115,7 @@ resource "helm_release" "prometheus-operator" {
   chart      = "prometheus-operator"
   version    = var.prometheus_operator_version
   namespace  = "prometheus"
+  wait       = false
 
   set {
     name  = "kubeEtcd.enabled"
@@ -159,6 +160,7 @@ resource "helm_release" "elasticsearch" {
   chart      = "elasticsearch"
   version    = var.elastic_version
   namespace  = "elastic"
+  wait       = false
 
   set {
     name  = "replicas"
@@ -177,6 +179,7 @@ resource "helm_release" "logstash" {
   chart      = "logstash"
   version    = var.elastic_version
   namespace  = "elastic"
+  wait       = false
 
   set {
     name  = "service.type"
@@ -230,6 +233,7 @@ resource "helm_release" "filebeat" {
   chart      = "filebeat"
   version    = var.elastic_version
   namespace  = "elastic"
+  wait       = false
 }
 
 resource "helm_release" "kibana" {
@@ -238,4 +242,5 @@ resource "helm_release" "kibana" {
   chart      = "kibana"
   version    = var.elastic_version
   namespace  = "elastic"
+  wait       = false
 }
