@@ -158,7 +158,17 @@ resource "helm_release" "elasticsearch" {
   repository = "https://helm.elastic.co"
   chart      = "elasticsearch"
   version    = var.elastic_version
-  namespace  = "elastic"  
+  namespace  = "elastic"
+
+  set {
+    name  = "replicas"
+    value = var.elasicsearch_replicas
+  }
+
+  set {
+    name  = "minimumMasterNodes"
+    value = var.elasticsearch_minimum_master_nodes
+  }
 }
 
 resource "helm_release" "logstash" {

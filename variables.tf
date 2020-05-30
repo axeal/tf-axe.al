@@ -89,3 +89,13 @@ variable "prometheus_operator_version" {
 variable "elastic_version" {
   type = string
 }
+
+variable "elasicsearch_replicas" {
+  type    = number
+  default = 1
+}
+
+variable "elasticsearch_minimum_master_nodes" {
+  type    = number
+  default = 1
+}
