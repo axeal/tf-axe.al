@@ -122,6 +122,16 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
+    name  = "controller.metrics.serviceMonitor.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "controller.metrics.serviceMonitor.namespace"
+    value = "prometheus"
+  }
+
+  set {
     name  = "podSecurityPolicy.enabled"
     value = "true"
   }
