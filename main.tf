@@ -173,6 +173,11 @@ resource "helm_release" "prometheus-operator" {
   wait       = false
 
   set {
+    name  = "prometheus.prometheusSpec.serviceMonitorSelectorNilUsesHelmValues"
+    value = "false"
+  }
+
+  set {
     name  = "kubeEtcd.enabled"
     value = "false"
   }
