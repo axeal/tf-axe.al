@@ -4,3 +4,4 @@ namespace: prometheus
 
 resources:
 - ingress-nginx-dashboards.yaml
+- fluentd-service-monitor.yaml

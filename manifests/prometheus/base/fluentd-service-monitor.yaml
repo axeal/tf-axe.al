@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: fluentd
+  labels:
+    app.kubernetes.io/name: fluentd
+    app.kubernetes.io/instance: fluentd
+    app.kubernetes.io/version: "1.10.4"
+    app.kubernetes.io/part-of: fluentd
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/component: forwarder
+spec:
+  endpoints:
+  - interval: 30s
+    port: metrics
+    path: /metrics
+  namespaceSelector:
+    matchNames:
+    - fluentd
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: forwarder
+      app.kubernetes.io/instance: fluentd
+      app.kubernetes.io/name: fluentd
