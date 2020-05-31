@@ -80,6 +80,8 @@ resource "kubernetes_service" "nginx_ingress_loadbalancer" {
     labels = {
       "app.kubernetes.io/name"    = "nginx-ingress"
       "app.kubernetes.io/part-of" = "nginx-ingress"
+      "k8s.scaleway.com/cluster"  = scaleway_k8s_cluster_beta.k8s-cluster.id
+      "k8s.scaleway.com/kapsule"  = ""
     }
   }
   spec {
