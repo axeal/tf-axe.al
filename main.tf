@@ -37,6 +37,9 @@ resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
   size       = var.scaleway_pool_size
 }
 
+resource "scaleway_lb_ip_beta" "nginx_ingress" {
+}
+
 provider "kubernetes" {
   load_config_file = "false"
 
@@ -60,6 +63,37 @@ provider "helm" {
     cluster_ca_certificate = base64decode(
       scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].cluster_ca_certificate
     )
+  }
+}
+
+resource "kubernetes_service" "nginx_ingress_loadbalancer" {
+  metadata {
+    name      = "nginx-ingress"
+    namespace = "kube-system"
+    labels = {
+      "app.kubernetes.io/name"    = "nginx-ingress"
+      "app.kubernetes.io/part-of" = "nginx-ingress"
+    }
+  }
+  spec {
+    selector = {
+      "app.kubernetes.io/name"    = "nginx-ingress"
+      "app.kubernetes.io/part-of" = "nginx-ingress"
+    }
+    session_affinity = "ClientIP"
+    port {
+      port        = 80
+      target_port = 80
+      name        = "http"
+    }
+    port {
+      port        = 443
+      target_port = 443
+      name        = "https"
+    }
+
+    type             = "LoadBalancer"
+    load_balancer_ip = scaleway_lb_ip_beta.nginx_ingress.ip_address
   }
 }
 
