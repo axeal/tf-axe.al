@@ -98,6 +98,10 @@ variable "cloudflare_origin_key" {
   type = string
 }
 
+variable "ingress_nginx_version" {
+  type = string
+}
+
 variable "prometheus_operator_version" {
   type = string
 }

@@ -77,37 +77,46 @@ provider "helm" {
   }
 }
 
-resource "kubernetes_service" "nginx_ingress_loadbalancer" {
+resource "kubernetes_namespace" "ingress-nginx" {
   metadata {
-    name      = "nginx-ingress"
-    namespace = "kube-system"
-    labels = {
-      "app.kubernetes.io/name"    = "nginx-ingress"
-      "app.kubernetes.io/part-of" = "nginx-ingress"
-      "k8s.scaleway.com/cluster"  = split("/", scaleway_k8s_cluster_beta.k8s-cluster.id)[1]
-      "k8s.scaleway.com/kapsule"  = ""
-    }
+    name = "ingress-nginx"
   }
-  spec {
-    selector = {
-      "app.kubernetes.io/name"    = "nginx-ingress"
-      "app.kubernetes.io/part-of" = "nginx-ingress"
-    }
-    session_affinity = "ClientIP"
-    port {
-      port        = 80
-      target_port = 80
-      name        = "http"
-    }
-    port {
-      port        = 443
-      target_port = 443
-      name        = "https"
-    }
+}
 
-    type             = "LoadBalancer"
-    load_balancer_ip = scaleway_lb_ip_beta.nginx_ingress.ip_address
+data "cloudflare_ip_ranges" "cloudflare" {}
+
+resource "helm_release" "ingress-nginx" {
+  name       = "ingress-nginx"
+  repository = "https://kubernetes.github.io/ingress-nginx"
+  chart      = "ingress-nginx"
+  version    = var.ingress_nginx_version
+  namespace  = "ingress-nginx"
+
+  set {
+    name  = "controller.service.loadBalancerIP"
+    value = scaleway_lb_ip_beta.nginx_ingress.ip_address
   }
+
+  set {
+    name  = "controller.service.loadBalancerSourceRanges"
+    value = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
+  }
+
+  set {
+    name  = "controller.autoscaling.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "controller.metrics.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "podSecurityPolicy.enabled"
+    value = "true"
+  }
+  
 }
 
 data "kustomization" "psps" {
