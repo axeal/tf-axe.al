@@ -107,8 +107,13 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "controller.autoscaling.enabled"
-    value = "true"
+    name  = "controller.kind"
+    value = "DaemonSet"
+  }
+
+  set {
+    name  = "controller.daemonset.useHostPort"
+    value = "false"
   }
 
   set {
