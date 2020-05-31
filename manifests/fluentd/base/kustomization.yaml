@@ -10,7 +10,7 @@ commonLabels:
   app.kubernetes.io/component: forwarder
 images:
   - name: fluent/fluentd-kubernetes-daemonset
-    newTag: v1.10.4-debian-elasticsearch7
+    newTag: v1.10.4-debian-elasticsearch7-1.0
 resources:
 - service-account.yaml
 - daemonset.yaml
