@@ -40,6 +40,14 @@ resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
 resource "scaleway_lb_ip_beta" "nginx_ingress" {
 }
 
+resource "cloudflare_record" "nginx_ingress_dns" {
+  zone_id = var.cloudflare_zone_id
+  name    = var.cloudflare_record_name
+  value   = scaleway_lb_ip_beta.nginx_ingress.ip_address
+  type    = "A"
+  proxied = true
+}
+
 provider "kubernetes" {
   load_config_file = "false"
 
