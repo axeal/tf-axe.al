@@ -4,10 +4,13 @@ namespace: elastic
 commonLabels:
   app.kubernetes.io/name: fluentd
   app.kubernetes.io/instance: fluentd
-  app.kubernetes.io/version: "v1"
+  app.kubernetes.io/version: "1.10.4"
   app.kubernetes.io/part-of: fluentd
   app.kubernetes.io/managed-by: kustomize
   app.kubernetes.io/component: forwarder
+images:
+  - name: fluent/fluentd-kubernetes-daemonset
+    newTag: v1.10.4-debian-elasticsearch
 resources:
 - service-account.yaml
 - daemonset.yaml
