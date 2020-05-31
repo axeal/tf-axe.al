@@ -14,3 +14,4 @@ images:
 resources:
 - service-account.yaml
 - daemonset.yaml
+- service.yaml
