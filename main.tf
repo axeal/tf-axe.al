@@ -323,6 +323,12 @@ resource "helm_release" "kibana" {
   wait       = false
 }
 
+resource "kubernetes_namespace" "fluentd" {
+  metadata {
+    name = "fluentd"
+  }
+}
+
 data "kustomization" "fluentd" {
   path = "manifests/fluentd/base"
 }
