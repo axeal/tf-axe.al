@@ -47,48 +47,8 @@ provider "kubernetes" {
   )
 }
 
-resource "kubernetes_namespace" "blog" {
-  metadata {
-    name = "blog"
-  }
-}
-
-resource "kubernetes_secret" "blog-cloudflare-origin" {
-  metadata {
-    name      = "blog-tls"
-    namespace = "blog"
-  }
-
-  data = {
-    "tls.crt" = var.cloudflare_origin_cert
-    "tls.key" = var.cloudflare_origin_key
-  }
-
-  type = "kubernetes.io/tls"
-}
-
 provider "kustomization" {
   kubeconfig_raw = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].config_file
-}
-
-data "kustomization" "psps" {
-  path = "manifests/psp"
-}
-
-resource "kustomization_resource" "psps" {
-  for_each = data.kustomization.psps.ids
-
-  manifest = data.kustomization.psps.manifests[each.value]
-}
-
-data "kustomization" "blog" {
-  path = "manifests/blog/base"
-}
-
-resource "kustomization_resource" "blog" {
-  for_each = data.kustomization.blog.ids
-
-  manifest = data.kustomization.blog.manifests[each.value]
 }
 
 provider "helm" {
@@ -101,6 +61,16 @@ provider "helm" {
       scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].cluster_ca_certificate
     )
   }
+}
+
+data "kustomization" "psps" {
+  path = "manifests/psp"
+}
+
+resource "kustomization_resource" "psps" {
+  for_each = data.kustomization.psps.ids
+
+  manifest = data.kustomization.psps.manifests[each.value]
 }
 
 resource "kubernetes_namespace" "prometheus" {
@@ -136,6 +106,87 @@ resource "helm_release" "prometheus-operator" {
     name  = "kubeControllerManager.enabled"
     value = "false"
   }
+}
+
+resource "tls_private_key" "vpa_webhook_ca" {
+  algorithm = var.vpa_webhook_ca_key_algorithm
+}
+
+resource "tls_self_signed_cert" "vpa_webhook_ca" {
+  key_algorithm   = tls_private_key.vpa_webhook_ca.algorithm
+  private_key_pem = tls_private_key.vpa_webhook_ca.private_key_pem
+
+  subject {
+    common_name = "vpa_webhook_ca"
+  }
+
+  validity_period_hours = var.vpa_webhook_ca_cert_validity_period
+  is_ca_certificate     = true
+
+  allowed_uses = [
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+    "client_auth",
+    "cert_signing"
+  ]
+}
+
+resource "tls_private_key" "vpa_webhook_server" {
+  algorithm = var.vpa_webhook_server_key_algorithm
+}
+
+resource "tls_cert_request" "vpa_webhook_server" {
+  key_algorithm   = tls_private_key.vpa_webhook_server.algorithm
+  private_key_pem = tls_private_key.vpa_webhook_server.private_key_pem
+
+  subject {
+    common_name = "vpa-webhook.kube-system.svc"
+  }
+}
+
+resource "tls_locally_signed_cert" "vpa_webhook_server" {
+  cert_request_pem = tls_cert_request.vpa_webhook_server.cert_request_pem
+
+  ca_key_algorithm   = tls_private_key.vpa_webhook_ca.algorithm
+  ca_private_key_pem = tls_private_key.vpa_webhook_ca.private_key_pem
+  ca_cert_pem        = tls_self_signed_cert.vpa_webhook_ca.cert_pem
+
+  validity_period_hours = var.vpa_webhook_server_cert_validity_period
+
+  allowed_uses = [
+    "content_commitment",
+    "key_encipherment",
+    "digital_signature",
+    "server_auth",
+    "client_auth"
+  ]
+}
+
+resource "kubernetes_secret" "vpa-tls-certs" {
+  metadata {
+    name      = "vpa-tls-certs"
+    namespace = "kube-system"
+  }
+
+  data = {
+    "caKey.pem"      = tls_private_key.vpa_webhook_ca.private_key_pem
+    "caCert.pem"     = tls_self_signed_cert.vpa_webhook_ca.cert_pem
+    "serverKey.pem"  = tls_private_key.vpa_webhook_server.private_key_pem
+    "serverCert.pem" = tls_locally_signed_cert.vpa_webhook_server.cert_pem
+  }
+
+  type = "Opaque"
+}
+
+data "kustomization" "vpa" {
+  path = "manifests/vpa/base"
+}
+
+resource "kustomization_resource" "vpa" {
+  for_each = data.kustomization.vpa.ids
+
+  manifest = data.kustomization.vpa.manifests[each.value]
 }
 
 resource "kubernetes_namespace" "elastic" {
@@ -246,83 +297,32 @@ resource "kustomization_resource" "fluentd" {
   manifest = data.kustomization.fluentd.manifests[each.value]
 }
 
-resource "tls_private_key" "vpa_webhook_ca" {
-  algorithm = var.vpa_webhook_ca_key_algorithm
-}
-
-resource "tls_self_signed_cert" "vpa_webhook_ca" {
-  key_algorithm   = tls_private_key.vpa_webhook_ca.algorithm
-  private_key_pem = tls_private_key.vpa_webhook_ca.private_key_pem
-
-  subject {
-    common_name = "vpa_webhook_ca"
-  }
-
-  validity_period_hours = var.vpa_webhook_ca_cert_validity_period
-  is_ca_certificate     = true
-
-  allowed_uses = [
-    "key_encipherment",
-    "digital_signature",
-    "server_auth",
-    "client_auth",
-    "cert_signing"
-  ]
-}
-
-resource "tls_private_key" "vpa_webhook_server" {
-  algorithm = var.vpa_webhook_server_key_algorithm
-}
-
-resource "tls_cert_request" "vpa_webhook_server" {
-  key_algorithm   = tls_private_key.vpa_webhook_server.algorithm
-  private_key_pem = tls_private_key.vpa_webhook_server.private_key_pem
-
-  subject {
-    common_name = "vpa-webhook.kube-system.svc"
-  }
-}
-
-resource "tls_locally_signed_cert" "vpa_webhook_server" {
-  cert_request_pem = tls_cert_request.vpa_webhook_server.cert_request_pem
-
-  ca_key_algorithm   = tls_private_key.vpa_webhook_ca.algorithm
-  ca_private_key_pem = tls_private_key.vpa_webhook_ca.private_key_pem
-  ca_cert_pem        = tls_self_signed_cert.vpa_webhook_ca.cert_pem
-
-  validity_period_hours = var.vpa_webhook_server_cert_validity_period
-
-  allowed_uses = [
-    "content_commitment",
-    "key_encipherment",
-    "digital_signature",
-    "server_auth",
-    "client_auth"
-  ]
-}
-
-resource "kubernetes_secret" "vpa-tls-certs" {
+resource "kubernetes_namespace" "blog" {
   metadata {
-    name      = "vpa-tls-certs"
-    namespace = "kube-system"
+    name = "blog"
+  }
+}
+
+resource "kubernetes_secret" "blog-cloudflare-origin" {
+  metadata {
+    name      = "blog-tls"
+    namespace = "blog"
   }
 
   data = {
-    "caKey.pem"      = tls_private_key.vpa_webhook_ca.private_key_pem
-    "caCert.pem"     = tls_self_signed_cert.vpa_webhook_ca.cert_pem
-    "serverKey.pem"  = tls_private_key.vpa_webhook_server.private_key_pem
-    "serverCert.pem" = tls_locally_signed_cert.vpa_webhook_server.cert_pem
+    "tls.crt" = var.cloudflare_origin_cert
+    "tls.key" = var.cloudflare_origin_key
   }
 
-  type = "Opaque"
+  type = "kubernetes.io/tls"
 }
 
-data "kustomization" "vpa" {
-  path = "manifests/vpa/base"
+data "kustomization" "blog" {
+  path = "manifests/blog/base"
 }
 
-resource "kustomization_resource" "vpa" {
-  for_each = data.kustomization.vpa.ids
+resource "kustomization_resource" "blog" {
+  for_each = data.kustomization.blog.ids
 
-  manifest = data.kustomization.vpa.manifests[each.value]
+  manifest = data.kustomization.blog.manifests[each.value]
 }
