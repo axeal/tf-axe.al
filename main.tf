@@ -101,8 +101,8 @@ resource "helm_release" "ingress-nginx" {
     for_each = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
 
     content {
-      name                = "controller.service.loadBalancerSourceRanges[${set.key}]"
-      value               = set.value
+      name  = "controller.service.loadBalancerSourceRanges[${set.key}]"
+      value = set.value
     }
   }
 
@@ -120,7 +120,7 @@ resource "helm_release" "ingress-nginx" {
     name  = "podSecurityPolicy.enabled"
     value = "true"
   }
-  
+
 }
 
 data "kustomization" "psps" {

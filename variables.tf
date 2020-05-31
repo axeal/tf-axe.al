@@ -68,7 +68,7 @@ variable "scaleway_pool_min_size" {
 }
 
 variable "scaleway_pool_max_size" {
-  type   = number
+  type    = number
   default = 5
 }
 
