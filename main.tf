@@ -144,6 +144,16 @@ resource "kubernetes_namespace" "prometheus" {
   }
 }
 
+data "kustomization" "prometheus" {
+  path = "manifests/prometheus/base"
+}
+
+resource "kustomization_resource" "prometheus" {
+  for_each = data.kustomization.prometheus.ids
+
+  manifest = data.kustomization.prometheus.manifests[each.value]
+}
+
 resource "helm_release" "prometheus-operator" {
   name       = "prometheus-operator"
   repository = "https://kubernetes-charts.storage.googleapis.com"
