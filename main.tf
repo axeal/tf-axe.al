@@ -101,7 +101,7 @@ resource "helm_release" "ingress-nginx" {
     for_each = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
 
     content {
-      key                 = "controller.service.loadBalancerSourceRanges[${index(data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks,set.value)}]"
+      name                = "controller.service.loadBalancerSourceRanges[${set.key}]"
       value               = set.value
     }
   }
