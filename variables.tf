@@ -62,6 +62,26 @@ variable "scaleway_pool_size" {
   default = 1
 }
 
+variable "scaleway_pool_min_size" {
+  type    = number
+  default = 1
+}
+
+variable "scaleway_pool_max_size" {
+  type   = number
+  defaut = 5
+}
+
+variable "scaleway_pool_autoscaling" {
+  type    = bool
+  default = true
+}
+
+variable "scaleway_pool_autohealing" {
+  type    = bool
+  default = true
+}
+
 variable "cloudflare_zone_id" {
   type = string
 }

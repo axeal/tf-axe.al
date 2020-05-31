@@ -30,10 +30,14 @@ resource "scaleway_k8s_cluster_beta" "k8s-cluster" {
 }
 
 resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
-  cluster_id = scaleway_k8s_cluster_beta.k8s-cluster.id
-  name       = var.scaleway_pool_name
-  node_type  = var.scaleway_node_type
-  size       = var.scaleway_pool_size
+  cluster_id  = scaleway_k8s_cluster_beta.k8s-cluster.id
+  name        = var.scaleway_pool_name
+  node_type   = var.scaleway_node_type
+  size        = var.scaleway_pool_size
+  min_size    = var.scaleway_pool_min_size
+  max_size    = var.scaleway_pool_max_size
+  autoscaling = var.scaleway_pool_autoscaling
+  autohealing = var.scaleway_pool_autohealing
 }
 
 resource "scaleway_lb_ip_beta" "nginx_ingress" {
@@ -80,7 +84,7 @@ resource "kubernetes_service" "nginx_ingress_loadbalancer" {
     labels = {
       "app.kubernetes.io/name"    = "nginx-ingress"
       "app.kubernetes.io/part-of" = "nginx-ingress"
-      "k8s.scaleway.com/cluster"  = split("/",scaleway_k8s_cluster_beta.k8s-cluster.id)[1]
+      "k8s.scaleway.com/cluster"  = split("/", scaleway_k8s_cluster_beta.k8s-cluster.id)[1]
       "k8s.scaleway.com/kapsule"  = ""
     }
   }
