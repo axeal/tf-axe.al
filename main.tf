@@ -17,9 +17,8 @@ provider "scaleway" {
 }
 
 provider "cloudflare" {
-  version = "~> 2.0"
-  email   = var.cloudflare_email
-  api_key = var.cloudflare_api_key
+  version   = "~> 2.0"
+  api_token = var.cloudflare_api_token
 }
 
 resource "scaleway_k8s_cluster_beta" "k8s-cluster" {

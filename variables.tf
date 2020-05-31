@@ -20,11 +20,7 @@ variable "scaleway_region" {
   default = "fr-par"
 }
 
-variable "cloudflare_email" {
-  type = string
-}
-
-variable "cloudflare_api_key" {
+variable "cloudflare_api_token" {
   type = string
 }
 
