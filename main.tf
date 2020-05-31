@@ -97,9 +97,14 @@ resource "helm_release" "ingress-nginx" {
     value = scaleway_lb_ip_beta.nginx_ingress.ip_address
   }
 
-  set {
-    name  = "controller.service.loadBalancerSourceRanges"
-    value = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
+  dynamic "set" {
+    for_each = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
+
+    content {
+      key                 = "controller.service.loadBalancerSourceRanges[${set.key}]"
+      value               = set.value
+      propagate_at_launch = true
+    }
   }
 
   set {
