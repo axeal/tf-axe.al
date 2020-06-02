@@ -173,16 +173,6 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "controller.extraContainers.argo.command[0]"
-    value = "cloudflared"
-  }
-
-  set {
-    name  = "controller.extraContainers.argo.command[1]"
-    value = "tunnel"
-  }
-
-  set {
     name  = "controller.extraContainers.argo.args[0]"
     value = "--url=http://127.0.0.1:80"
   }
