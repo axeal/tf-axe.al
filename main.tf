@@ -17,8 +17,9 @@ provider "scaleway" {
 }
 
 provider "cloudflare" {
-  version   = "~> 2.0"
-  api_token = var.cloudflare_api_token
+  version              = "~> 2.0"
+  api_token            = var.cloudflare_api_token
+  api_user_service_key = var.cloudflare_api_user_service_key
 }
 
 resource "scaleway_k8s_cluster_beta" "k8s-cluster" {
@@ -83,6 +84,41 @@ resource "kubernetes_namespace" "ingress-nginx" {
   }
 }
 
+resource "tls_private_key" "cloudflare_origin_ca" {
+  algorithm = var.cloudflare_origin_ca_key_algorithm
+}
+
+resource "tls_cert_request" "cloudflare_origin_ca" {
+  key_algorithm   = tls_private_key.cloudflare_origin_ca.algorithm
+  private_key_pem = tls_private_key.cloudflare_origin_ca.private_key_pem
+
+  subject {
+    common_name  = ""
+    organization = "Terraform"
+  }
+}
+
+resource "cloudflare_origin_ca_certificate" "cloudflare_origin_ca" {
+  csr                = tls_cert_request.cloudflare_origin_ca.cert_request_pem
+  hostnames          = var.cloudflare_origin_ca_hostnames
+  request_type       = "origin-rsa"
+  requested_validity = 365
+}
+
+resource "kubernetes_secret" "cloudflare_origin_ca" {
+  metadata {
+    name      = "cloudflare-origin-ca"
+    namespace = "ingress-nginx"
+  }
+
+  data = {
+    "tls.crt" = cloudflare_origin_ca_certificate.cloudflare_origin_ca.certificate
+    "tls.key" = tls_private_key.cloudflare_origin_ca.private_key_pem
+  }
+
+  type = "kubernetes.io/tls"
+}
+
 data "cloudflare_ip_ranges" "cloudflare" {}
 
 resource "helm_release" "ingress-nginx" {
@@ -109,6 +145,11 @@ resource "helm_release" "ingress-nginx" {
   set {
     name  = "controller.kind"
     value = "DaemonSet"
+  }
+
+  set {
+    name  = "controller.extraArgs.default-ssl-certificate"
+    value = "ingress-nginx/cloudflare-origin-ca"
   }
 
   set {
@@ -343,20 +384,6 @@ resource "kubernetes_namespace" "blog" {
   metadata {
     name = "blog"
   }
-}
-
-resource "kubernetes_secret" "blog-cloudflare-origin" {
-  metadata {
-    name      = "blog-tls"
-    namespace = "blog"
-  }
-
-  data = {
-    "tls.crt" = var.cloudflare_origin_cert
-    "tls.key" = var.cloudflare_origin_key
-  }
-
-  type = "kubernetes.io/tls"
 }
 
 data "kustomization" "blog" {

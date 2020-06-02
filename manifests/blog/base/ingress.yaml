@@ -6,7 +6,6 @@ spec:
   tls:
   - hosts:
       - axe.al
-    secretName: blog-tls
   rules:
   - host: axe.al
     http:

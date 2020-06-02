@@ -24,6 +24,10 @@ variable "cloudflare_api_token" {
   type = string
 }
 
+variable "cloudflare_api_user_service_key" {
+  type = string
+}
+
 variable "scaleway_cluster_name" {
   type = string
 }
@@ -90,12 +94,13 @@ variable "cloudflare_record_name" {
   type = string
 }
 
-variable "cloudflare_origin_cert" {
-  type = string
+variable "cloudflare_origin_ca_key_algorithm" {
+  type    = string
+  default = "RSA"
 }
 
-variable "cloudflare_origin_key" {
-  type = string
+variable "cloudflare_origin_ca_hostnames" {
+  type = list(string)
 }
 
 variable "ingress_nginx_version" {
