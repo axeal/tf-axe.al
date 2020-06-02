@@ -41,6 +41,17 @@ resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
   autohealing = var.scaleway_pool_autohealing
 }
 
+resource "scaleway_lb_ip_beta" "nginx_ingress" {
+}
+
+resource "cloudflare_record" "nginx_ingress_dns" {
+  zone_id = var.cloudflare_zone_id
+  name    = var.cloudflare_record_name
+  value   = scaleway_lb_ip_beta.nginx_ingress.ip_address
+  type    = "A"
+  proxied = true
+}
+
 provider "kubernetes" {
   load_config_file = "false"
 
@@ -108,12 +119,28 @@ resource "kubernetes_secret" "cloudflare_origin_ca" {
   type = "kubernetes.io/tls"
 }
 
+data "cloudflare_ip_ranges" "cloudflare" {}
+
 resource "helm_release" "ingress-nginx" {
   name       = "ingress-nginx"
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
   version    = var.ingress_nginx_version
   namespace  = "ingress-nginx"
+
+  set {
+    name  = "controller.service.loadBalancerIP"
+    value = scaleway_lb_ip_beta.nginx_ingress.ip_address
+  }
+
+  dynamic "set" {
+    for_each = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
+
+    content {
+      name  = "controller.service.loadBalancerSourceRanges[${set.key}]"
+      value = set.value
+    }
+  }
 
   set {
     name  = "controller.kind"
@@ -128,126 +155,6 @@ resource "helm_release" "ingress-nginx" {
   set {
     name  = "controller.daemonset.useHostPort"
     value = "false"
-  }
-
-  set {
-    name  = "controller.service.enabled"
-    value = "false"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].name"
-    value = "argo"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].image"
-    value = "axeal/cloudflared:latest"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].imagePullPolicy"
-    value = "Always"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].command[0]"
-    value = "cloudflared"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].command[1]"
-    value = "tunnel"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].args[0]"
-    value = "--url=http://127.0.0.1:80"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].args[1]"
-    value = "--hostname=axe.al"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].args[2]"
-    value = "--origincert=/etc/cloudflared/tls.crt"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].args[3]"
-    value = "--no-autoupdate"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].env[0].name"
-    value = "POD_NAME"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].env[0].valueFrom.fieldRef.fieldPath"
-    value = "metadata.name"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].env[1].name"
-    value = "POD_NAMESPACE"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].env[1].valueFrom.fieldRef.fieldPath"
-    value = "metadata.namespace"
-  }
-  
-  set {
-    name  = "controller.extraContainers[0].resources.limits.cpu"
-    value = "100m"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].resources.limits.memory"
-    value = "200Mi"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].resources.requests.cpu"
-    value = "100m"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].resources.requests.memory"
-    value = "30Mi"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].volumeMounts[0].name"
-    value = "argo-tunnel-cert"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].volumeMounts[0].mountPath"
-    value = "/etc/cloudflared"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].volumeMounts[0].readOnly"
-    value = "true"
-  }
-
-  set {
-    name  = "controller.extraContainers[0].securityContext.runAsUser"
-    value = "101"
-  }
-
-  set {
-    name  = "controller.extraVolumes[0].name"
-    value = "argo-tunnel-cert"
-  }
-
-  set {
-    name  = "controller.extraVolumes[0].secret.secretName"
-    value = "argo-tunnel-cert"
   }
 
   set {
