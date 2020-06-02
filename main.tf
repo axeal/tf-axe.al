@@ -395,3 +395,28 @@ resource "kustomization_resource" "blog" {
 
   manifest = data.kustomization.blog.manifests[each.value]
 }
+
+resource "kubernetes_ingress" "blog_ingress" {
+  metadata {
+    name      = "blog"
+    namespace = "blog"
+  }
+
+  spec {
+    rule {
+      host = "axe.al"
+      http {
+        path {
+          backend {
+            service_name = "blog"
+            service_port = 8080
+          }
+        }
+      }
+    }
+
+    tls {
+      hosts = ["axe.al"]
+    }
+  }
+}
