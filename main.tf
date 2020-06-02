@@ -158,92 +158,102 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "controller.extraContainers.argo.name"
+    name  = "controller.extraContainers[0].name"
     value = "argo"
   }
 
   set {
-    name  = "controller.extraContainers.argo.image"
+    name  = "controller.extraContainers[0].image"
     value = "axeal/cloudflared:latest"
   }
 
   set {
-    name  = "controller.extraContainers.argo.imagePullPolicy"
+    name  = "controller.extraContainers[0].imagePullPolicy"
     value = "Always"
   }
 
   set {
-    name  = "controller.extraContainers.argo.args[0]"
+    name  = "controller.extraContainers[0].command[0]"
+    value = "cloudflared"
+  }
+
+  set {
+    name  = "controller.extraContainers[0].command[1]"
+    value = "tunnel"
+  }
+
+  set {
+    name  = "controller.extraContainers[0].args[0]"
     value = "--url=http://127.0.0.1:80"
   }
 
   set {
-    name  = "controller.extraContainers.argo.args[1]"
+    name  = "controller.extraContainers[0].args[1]"
     value = "--host=axe.al"
   }
 
   set {
-    name  = "controller.extraContainers.argo.args[2]"
+    name  = "controller.extraContainers[0].args[2]"
     value = "--origincert=/etc/cloudflared/tls.crt"
   }
 
   set {
-    name  = "controller.extraContainers.argo.args[3]"
+    name  = "controller.extraContainers[0].args[3]"
     value = "--no-autoupdate"
   }
 
   set {
-    name  = "controller.extraContainers.argo.env[0].name"
+    name  = "controller.extraContainers[0].env[0].name"
     value = "POD_NAME"
   }
 
   set {
-    name  = "controller.extraContainers.argo.env[0].valueFrom.fieldRef.fieldPath"
+    name  = "controller.extraContainers[0].env[0].valueFrom.fieldRef.fieldPath"
     value = "metadata.name"
   }
 
   set {
-    name  = "controller.extraContainers.argo.env[1].name"
+    name  = "controller.extraContainers[0].env[1].name"
     value = "POD_NAMESPACE"
   }
 
   set {
-    name  = "controller.extraContainers.argo.env[1].valueFrom.fieldRef.fieldPath"
+    name  = "controller.extraContainers[0].env[1].valueFrom.fieldRef.fieldPath"
     value = "metadata.namespace"
   }
   
   set {
-    name  = "controller.extraContainers.argo.resources.limits.cpu"
+    name  = "controller.extraContainers[0].resources.limits.cpu"
     value = "10m"
   }
 
   set {
-    name  = "controller.extraContainers.argo.resources.limits.memory"
+    name  = "controller.extraContainers[0].resources.limits.memory"
     value = "20Mi"
   }
 
   set {
-    name  = "controller.extraContainers.argo.resources.requests.cpu"
+    name  = "controller.extraContainers[0].resources.requests.cpu"
     value = "10m"
   }
 
   set {
-    name  = "controller.extraContainers.argo.resources.requests.memory"
+    name  = "controller.extraContainers[0].resources.requests.memory"
     value = "20Mi"
   }
 
   set {
-    name  = "controller.extraContainers.argo.volumeMounts[0].name"
+    name  = "controller.extraContainers[0].volumeMounts[0].name"
     value = "cloudflare-origin-ca"
   }
 
   set {
-    name  = "controller.extraContainers.argo.volumeMounts[0].mountPath"
+    name  = "controller.extraContainers[0].volumeMounts[0].mountPath"
     value = "/etc/cloudflared"
   }
 
   set {
-    name  = "controller.extraContainers.argo.volumeMounts[0].readOnly"
+    name  = "controller.extraContainers[0].volumeMounts[0].readOnly"
     value = "true"
   }
 
