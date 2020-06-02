@@ -158,6 +158,111 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
+    name  = "controller.extraContainers.argo.name"
+    value = "argo"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.image"
+    value = "axeal/cloudflared:latest"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.imagePullPolicy"
+    value = "Always"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.command"
+    value = "['cloudflared', 'tunnel']"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.args[0]"
+    value = "--url=http://127.0.0.1:80"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.args[1]"
+    value = "--host=axe.al"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.args[2]"
+    value = "--origincert=/etc/cloudflared/tls.crt"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.args[3]"
+    value = "--no-autoupdate"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.env[0].name"
+    value = "POD_NAME"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.env[0].valueFrom.fieldRef.fieldPath"
+    value = "metadata.name"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.env[1].name"
+    value = "POD_NAMESPACE"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.env[1].valueFrom.fieldRef.fieldPath"
+    value = "metadata.namespace"
+  }
+  
+  set {
+    name  = "controller.extraContainers.argo.resources.limits.cpu"
+    value = "10m"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.resources.limits.memory"
+    value = "20Mi"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.resources.requests.cpu"
+    value = "10m"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.resources.requests.memory"
+    value = "20Mi"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.volumeMounts[0].name"
+    value = "cloudflare-origin-ca"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.volumeMounts[0].mountPath"
+    value = "/etc/cloudflared"
+  }
+
+  set {
+    name  = "controller.extraContainers.argo.volumeMounts[0].readOnly"
+    value = "true"
+  }
+
+  set {
+    name  = "controller.extraVolumes[0].name"
+    value = "cloudflare-origin-ca"
+  }
+
+  set {
+    name  = "controller.extraVolumes[0].secret.secretName"
+    value = "cloudflare-origin-ca"
+  }
+
+  set {
     name  = "controller.metrics.enabled"
     value = "true"
   }
