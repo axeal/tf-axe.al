@@ -41,17 +41,6 @@ resource "scaleway_k8s_pool_beta" "k8s-pool-0" {
   autohealing = var.scaleway_pool_autohealing
 }
 
-resource "scaleway_lb_ip_beta" "nginx_ingress" {
-}
-
-resource "cloudflare_record" "nginx_ingress_dns" {
-  zone_id = var.cloudflare_zone_id
-  name    = var.cloudflare_record_name
-  value   = scaleway_lb_ip_beta.nginx_ingress.ip_address
-  type    = "A"
-  proxied = true
-}
-
 provider "kubernetes" {
   load_config_file = "false"
 
@@ -119,28 +108,12 @@ resource "kubernetes_secret" "cloudflare_origin_ca" {
   type = "kubernetes.io/tls"
 }
 
-data "cloudflare_ip_ranges" "cloudflare" {}
-
 resource "helm_release" "ingress-nginx" {
   name       = "ingress-nginx"
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
   version    = var.ingress_nginx_version
   namespace  = "ingress-nginx"
-
-  set {
-    name  = "controller.service.loadBalancerIP"
-    value = scaleway_lb_ip_beta.nginx_ingress.ip_address
-  }
-
-  dynamic "set" {
-    for_each = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
-
-    content {
-      name  = "controller.service.loadBalancerSourceRanges[${set.key}]"
-      value = set.value
-    }
-  }
 
   set {
     name  = "controller.kind"
@@ -154,6 +127,11 @@ resource "helm_release" "ingress-nginx" {
 
   set {
     name  = "controller.daemonset.useHostPort"
+    value = "false"
+  }
+
+  set {
+    name  = "controller.service.enabled"
     value = "false"
   }
 
@@ -189,7 +167,7 @@ resource "helm_release" "ingress-nginx" {
 
   set {
     name  = "controller.extraContainers[0].args[1]"
-    value = "--host=axe.al"
+    value = "--hostname=axe.al"
   }
 
   set {
@@ -224,27 +202,27 @@ resource "helm_release" "ingress-nginx" {
   
   set {
     name  = "controller.extraContainers[0].resources.limits.cpu"
-    value = "10m"
+    value = "100m"
   }
 
   set {
     name  = "controller.extraContainers[0].resources.limits.memory"
-    value = "20Mi"
+    value = "200Mi"
   }
 
   set {
     name  = "controller.extraContainers[0].resources.requests.cpu"
-    value = "10m"
+    value = "100m"
   }
 
   set {
     name  = "controller.extraContainers[0].resources.requests.memory"
-    value = "20Mi"
+    value = "30Mi"
   }
 
   set {
     name  = "controller.extraContainers[0].volumeMounts[0].name"
-    value = "cloudflare-origin-ca"
+    value = "argo-tunnel-cert"
   }
 
   set {
@@ -258,13 +236,18 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
+    name  = "controller.extraContainers[0].securityContext.runAsUser"
+    value = "101"
+  }
+
+  set {
     name  = "controller.extraVolumes[0].name"
-    value = "cloudflare-origin-ca"
+    value = "argo-tunnel-cert"
   }
 
   set {
     name  = "controller.extraVolumes[0].secret.secretName"
-    value = "cloudflare-origin-ca"
+    value = "argo-tunnel-cert"
   }
 
   set {
@@ -523,10 +506,6 @@ resource "kubernetes_ingress" "blog_ingress" {
           }
         }
       }
-    }
-
-    tls {
-      hosts = ["axe.al"]
     }
   }
 }
