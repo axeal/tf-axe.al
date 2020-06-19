@@ -239,8 +239,8 @@ resource "helm_release" "prometheus-operator" {
   }
 
   set {
-    name  = "prometheus.prometheusSpec.externalUrl"
-    value = "https://${var.cloudflare_record_name}/prometheus/"
+    name  = "prometheus.prometheusSpec.routePrefix"
+    value = "/prometheus"
   }
 
   set_string {
