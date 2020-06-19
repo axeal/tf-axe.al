@@ -237,6 +237,11 @@ resource "helm_release" "prometheus-operator" {
     name  = "kubeControllerManager.enabled"
     value = "false"
   }
+
+  set {
+    name  = "grafana.grafana.ini.server.root_url"
+    value = "${var.cloudflare_record_name}/grafana"
+  }
 }
 
 resource "tls_private_key" "vpa_webhook_ca" {
