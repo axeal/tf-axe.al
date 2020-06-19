@@ -254,7 +254,7 @@ resource "helm_release" "prometheus-operator" {
   }
 
   set {
-    name  = "prometheus.ingress.hosts"
+    name  = "prometheus.ingress.hosts[0]"
     value = var.cloudflare_record_name
   }
 
