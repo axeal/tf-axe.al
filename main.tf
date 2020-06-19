@@ -240,7 +240,12 @@ resource "helm_release" "prometheus-operator" {
 
   set_string {
     name  = "grafana.grafana\\.ini.server.root_url"
-    value = "grafana"
+    value = "https://${var.cloudflare_record_name}/grafana"
+  }
+
+  set_string {
+    name  = "grafana.grafana\\.ini.server.serve_from_sub_path"
+    value = "true"
   }
 }
 
