@@ -238,6 +238,11 @@ resource "helm_release" "prometheus-operator" {
     value = "false"
   }
 
+  set {
+    name  = "prometheus.prometheusSpec.externalUrl"
+    value = "https://${var.cloudflare_record_name}/prometheus/"
+  }
+
   set_string {
     name  = "grafana.grafana\\.ini.server.root_url"
     value = "https://${var.cloudflare_record_name}/grafana"
