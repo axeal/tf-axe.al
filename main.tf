@@ -239,7 +239,27 @@ resource "helm_release" "prometheus-operator" {
   }
 
   set {
-    name  = "prometheus.prometheusSpec.routePrefix"
+    name  = "prometheus.ingress.enabled"
+    value = "true"
+  }
+
+  set_string {
+    name  = "prometheus.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-url"
+    value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/auth"
+  }
+
+  set_string {
+    name  = "prometheus.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-signin"
+    value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/start?rd=https://$host$escaped_request_uri"
+  }
+
+  set {
+    name  = "prometheus.ingress.hosts"
+    value = var.cloudflare_record_name
+  }
+
+  set {
+    name  = "prometheus.ingress.paths[0]"
     value = "/prometheus"
   }
 

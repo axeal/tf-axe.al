@@ -144,3 +144,7 @@ variable "vpa_webhook_server_cert_validity_period" {
   type    = number
   default = 8760
 }
+
+variable "auth_prefix" {
+  type = string
+}
