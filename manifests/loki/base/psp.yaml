@@ -20,7 +20,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: oauth2-psp
+  name: loki-psp
 subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: Group
