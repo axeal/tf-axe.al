@@ -353,12 +353,12 @@ resource "helm_release" "prometheus-operator" {
   }
 
   set {
-    name  = "prometheus.prometheusSpec.volumeClaimTemplate.spec.accessModes"
+    name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes"
     value = "['ReadWriteOnce']"
   }
 
   set {
-    name  = "prometheus.prometheusSpec.volumeClaimTemplate.spec.resources.requests.storage"
+    name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage"
     value = "25Gi"
   }
 
