@@ -111,20 +111,6 @@ variable "prometheus_operator_version" {
   type = string
 }
 
-variable "elastic_version" {
-  type = string
-}
-
-variable "elasicsearch_replicas" {
-  type    = number
-  default = 1
-}
-
-variable "elasticsearch_minimum_master_nodes" {
-  type    = number
-  default = 1
-}
-
 variable "vpa_webhook_ca_key_algorithm" {
   type    = string
   default = "RSA"
@@ -146,5 +132,17 @@ variable "vpa_webhook_server_cert_validity_period" {
 }
 
 variable "auth_prefix" {
+  type = string
+}
+
+variable "oauth2_proxy_github_client_id" {
+  type = string
+}
+
+variable "oauth2_proxy_github_client_secret" {
+  type = string
+}
+
+variable "oauth2_proxy_cookie_secret" {
   type = string
 }

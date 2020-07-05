@@ -189,6 +189,60 @@ resource "kustomization_resource" "psps" {
   manifest = data.kustomization.psps.manifests[each.value]
 }
 
+resource "kubernetes_namespace" "oauth2_proxy" {
+  metadata {
+    name = "oauth2-proxy"
+  }
+}
+
+resource "kubernetes_secret" "oauth2_proxy" {
+  metadata {
+    name      = "oauth-proxy-secret"
+    namespace = "oauth2-proxy"
+  }
+
+  data = {
+    github-client-id     = var.oauth2_proxy_github_client_id
+    github-client-secret = var.oauth2_proxy_github_client_secret
+    cookie-secret        = var.oauth2_proxy_cookie_secret
+  }
+}
+
+data "kustomization" "oauth2_proxy" {
+  path = "manifests/oauth2-proxy/base"
+}
+
+resource "kustomization_resource" "oauth2_proxy" {
+  for_each = data.kustomization.oauth2_proxy.ids
+
+  manifest = data.kustomization.oauth2_proxy.manifests[each.value]
+}
+
+resource "kubernetes_ingress" "oauth2_proxy_ingress" {
+  metadata {
+    name      = "oauth2-proxy"
+    namespace = "oauth2-proxy"
+  }
+
+  spec {
+    rule {
+      host = "auth.axe.al"
+      http {
+        path {
+          backend {
+            service_name = "oauth2-proxy"
+            service_port = 4180
+          }
+          path = "/oauth2"
+        }
+      }
+    }
+    tls {
+      hosts = ["auth.axe.al"]
+    }
+  }
+}
+
 resource "kubernetes_namespace" "prometheus" {
   metadata {
     name = "prometheus"
