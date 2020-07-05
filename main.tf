@@ -386,6 +386,36 @@ resource "helm_release" "prometheus-operator" {
     name  = "prometheus.prometheusSpec.retentionSize"
     value = "25GiB"
   }
+
+  set {
+    name  = "grafana.additionalDataSources[0].name"
+    value = "Loki"
+  }
+
+  set {
+    name  = "grafana.additionalDataSources[0].type"
+    value = "loki"
+  }
+
+  set {
+    name  = "grafana.additionalDataSources[0].access"
+    value = "proxy"
+  }
+
+  set {
+    name  = "grafana.additionalDataSources[0].url"
+    value = "http://loki.loki.svc.cluster.local:3100"
+  }
+
+  set {
+    name  = "grafana.additionalDataSources[0].editable"
+    value = "false"
+  }
+
+  set {
+    name  = "grafana.additionalDataSources[0].basicAuth"
+    value = "falseype"
+  }
 }
 
 resource "tls_private_key" "vpa_webhook_ca" {
