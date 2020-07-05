@@ -351,6 +351,21 @@ resource "helm_release" "prometheus-operator" {
     name  = "alertmanager.ingress.hosts[0]"
     value = "alerts.axe.al"
   }
+
+  set {
+    name  = "prometheus.prometheusSpec.volumeClaimTemplate.spec.accessModes"
+    value = "['ReadWriteOnce']"
+  }
+
+  set {
+    name  = "prometheus.prometheusSpec.volumeClaimTemplate.spec.resources.requests.storage"
+    value = "25Gi"
+  }
+
+  set {
+    name  = "prometheus.prometheusSpec.retentionSize"
+    value = "25Gi"
+  }
 }
 
 resource "tls_private_key" "vpa_webhook_ca" {
