@@ -151,6 +151,6 @@ variable "loki_version" {
   type = string
 }
 
-variable "promtail_version" [
+variable "promtail_version" {
   type = string
-]
+}
