@@ -163,7 +163,7 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "controller.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.topologyKey"    
+    name  = "controller.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].topologyKey"    
     value = "kubernetes.io/hostname"
   }
 
