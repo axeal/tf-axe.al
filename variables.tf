@@ -146,3 +146,7 @@ variable "oauth2_proxy_github_client_secret" {
 variable "oauth2_proxy_cookie_secret" {
   type = string
 }
+
+variable "loki_version" {
+  type = string
+}
