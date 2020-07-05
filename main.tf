@@ -353,8 +353,8 @@ resource "helm_release" "prometheus-operator" {
   }
 
   set {
-    name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes"
-    value = "['ReadWriteOnce']"
+    name  = "prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0]"
+    value = "ReadWriteOnce"
   }
 
   set {
