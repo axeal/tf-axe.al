@@ -355,66 +355,6 @@ resource "kustomization_resource" "vpa" {
   manifest = data.kustomization.vpa.manifests[each.value]
 }
 
-resource "kubernetes_namespace" "elastic" {
-  metadata {
-    name = "elastic"
-  }
-}
-
-data "kustomization" "elasticsearch" {
-  path = "manifests/elastic/base"
-}
-
-resource "kustomization_resource" "elasticsearch" {
-  for_each = data.kustomization.elasticsearch.ids
-
-  manifest = data.kustomization.elasticsearch.manifests[each.value]
-}
-
-resource "helm_release" "elasticsearch" {
-  name       = "elasticsearch"
-  repository = "https://helm.elastic.co"
-  chart      = "elasticsearch"
-  version    = var.elastic_version
-  namespace  = "elastic"
-  wait       = false
-
-  set {
-    name  = "replicas"
-    value = var.elasicsearch_replicas
-  }
-
-  set {
-    name  = "minimumMasterNodes"
-    value = var.elasticsearch_minimum_master_nodes
-  }
-}
-
-resource "helm_release" "kibana" {
-  name       = "kibana"
-  repository = "https://helm.elastic.co"
-  chart      = "kibana"
-  version    = var.elastic_version
-  namespace  = "elastic"
-  wait       = false
-}
-
-resource "kubernetes_namespace" "fluentd" {
-  metadata {
-    name = "fluentd"
-  }
-}
-
-data "kustomization" "fluentd" {
-  path = "manifests/fluentd/base"
-}
-
-resource "kustomization_resource" "fluentd" {
-  for_each = data.kustomization.fluentd.ids
-
-  manifest = data.kustomization.fluentd.manifests[each.value]
-}
-
 resource "kubernetes_namespace" "blog" {
   metadata {
     name = "blog"
