@@ -364,7 +364,7 @@ resource "helm_release" "prometheus-operator" {
 
   set {
     name  = "prometheus.prometheusSpec.retentionSize"
-    value = "25Gi"
+    value = "25GiB"
   }
 }
 
