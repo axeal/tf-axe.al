@@ -143,18 +143,33 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "controller.kind"
-    value = "DaemonSet"
+    name  = "controller.replicaCount"
+    value = "2"
+  }
+
+  set {
+    name  = "controller.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].key"
+    value = "app.kubernetes.io/name"
+  }
+
+  set {
+    name  = "controller.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].operator"
+    value = "In"
+  }
+
+  set {
+    name  = "controller.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].values[0]"
+    value = "ingress-nginx"
+  }
+
+  set {
+    name  = "controller.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.topologyKey"    
+    value = "kubernetes.io/hostname"
   }
 
   set {
     name  = "controller.extraArgs.default-ssl-certificate"
     value = "ingress-nginx/cloudflare-origin-ca"
-  }
-
-  set {
-    name  = "controller.daemonset.useHostPort"
-    value = "false"
   }
 
   set {
