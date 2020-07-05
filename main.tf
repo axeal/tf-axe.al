@@ -297,12 +297,13 @@ resource "helm_release" "prometheus-operator" {
     value = "true"
   }
 
-  set_string {
+  set {
     name  = "prometheus.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-url"
     value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/auth"
+    type  = "string"
   }
 
-  set_string {
+  set {
     name  = "prometheus.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-signin"
     value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/start?rd=https://$host$escaped_request_uri"
   }
@@ -317,14 +318,16 @@ resource "helm_release" "prometheus-operator" {
     value = "true"
   }
 
-  set_string {
+  set {
     name  = "grafana.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-url"
     value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/auth"
+    type  = "string"
   }
 
-  set_string {
+  set {
     name  = "grafana.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-signin"
     value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/start?rd=https://$host$escaped_request_uri"
+    type  = "string"
   }
 
   set {
@@ -337,14 +340,16 @@ resource "helm_release" "prometheus-operator" {
     value = "true"
   }
 
-  set_string {
+  set {
     name  = "alertmanager.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-url"
     value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/auth"
+    type  = "string"
   }
 
-  set_string {
+  set {
     name  = "alertmanager.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-signin"
     value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/start?rd=https://$host$escaped_request_uri"
+    type  = "string"
   }
 
   set {
