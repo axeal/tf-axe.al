@@ -309,22 +309,17 @@ resource "helm_release" "prometheus-operator" {
 
   set {
     name  = "prometheus.ingress.hosts[0]"
-    value = var.cloudflare_record_name
+    value = "prometheus.axe.al"
   }
 
   set {
     name  = "prometheus.ingress.paths[0]"
-    value = "/prometheus/"
-  }
-
-  set {
-    name  = "prometheus.prometheusSpec.externalUrl"
-    value = "https://axe.al/prometheus/"
+    value = "/"
   }
 
   set {
     name  = "prometheus.ingress.tls[0].hosts[0]"
-    value = "axe.al"
+    value = "prometheus.axe.al"
   }
 
   set_string {
