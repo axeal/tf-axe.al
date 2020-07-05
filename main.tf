@@ -314,6 +314,16 @@ resource "helm_release" "prometheus-operator" {
 
   set {
     name  = "prometheus.ingress.paths[0]"
+    value = "/prometheus/"
+  }
+
+  set {
+    name  = "prometheus.prometheusSpec.externalUrl"
+    value = "https://axe.al/prometheus/"
+  }
+
+  set {
+    name  = "prometheus.prometheusSpec.routePrefix"
     value = "/prometheus"
   }
 
