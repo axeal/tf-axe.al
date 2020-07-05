@@ -520,3 +520,17 @@ resource "helm_release" "loki" {
   namespace  = "loki"
   wait       = false
 }
+
+resource "helm_release" "promtail" {
+  name       = "promtail"
+  repository = "https://grafana.github.io/loki/charts"
+  chart      = "promtail"
+  version    = var.promtail_version
+  namespace  = "loki"
+  wait       = false
+
+  set {
+    name  = "loki.serviceName"
+    value = "loki"
+  }
+}

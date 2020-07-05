@@ -150,3 +150,7 @@ variable "oauth2_proxy_cookie_secret" {
 variable "loki_version" {
   type = string
 }
+
+variable "promtail_version" [
+  type = string
+]
