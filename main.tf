@@ -323,11 +323,6 @@ resource "helm_release" "prometheus-operator" {
   }
 
   set {
-    name  = "prometheus.prometheusSpec.routePrefix"
-    value = "/prometheus"
-  }
-
-  set {
     name  = "prometheus.ingress.tls[0].hosts[0]"
     value = "axe.al"
   }
