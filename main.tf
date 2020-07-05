@@ -313,23 +313,43 @@ resource "helm_release" "prometheus-operator" {
   }
 
   set {
-    name  = "prometheus.ingress.paths[0]"
-    value = "/"
+    name  = "grafana.ingress.enabled"
+    value = "true"
+  }
+
+  set_string {
+    name  = "grafana.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-url"
+    value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/auth"
+  }
+
+  set_string {
+    name  = "grafana.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-signin"
+    value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/start?rd=https://$host$escaped_request_uri"
   }
 
   set {
-    name  = "prometheus.ingress.tls[0].hosts[0]"
-    value = "prometheus.axe.al"
+    name  = "grafana.ingress.hosts[0]"
+    value = "grafana.axe.al"
   }
 
-  set_string {
-    name  = "grafana.grafana\\.ini.server.root_url"
-    value = "https://${var.cloudflare_record_name}/grafana"
-  }
-
-  set_string {
-    name  = "grafana.grafana\\.ini.server.serve_from_sub_path"
+  set {
+    name  = "alertmanager.ingress.enabled"
     value = "true"
+  }
+
+  set_string {
+    name  = "alertmanager.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-url"
+    value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/auth"
+  }
+
+  set_string {
+    name  = "alertmanager.ingress.annotations.nginx\\.ingress\\.kubernetes\\.io/auth-signin"
+    value = "https://${var.auth_prefix}.${var.cloudflare_record_name}/oauth2/start?rd=https://$host$escaped_request_uri"
+  }
+
+  set {
+    name  = "alertmanager.ingress.hosts[0]"
+    value = "alerts.axe.al"
   }
 }
 
