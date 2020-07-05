@@ -505,3 +505,18 @@ resource "kubernetes_ingress" "blog_ingress" {
     }
   }
 }
+
+resource "kubernetes_namespace" "loki" {
+  metadata {
+    name = "loki"
+  }
+}
+
+resource "helm_release" "loki" {
+  name       = "loki"
+  repository = "https://grafana.github.io/loki/charts"
+  chart      = "loki"
+  version    = var.loki_version
+  namespace  = "loki"
+  wait       = false
+}
