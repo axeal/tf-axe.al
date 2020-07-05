@@ -512,6 +512,16 @@ resource "kubernetes_namespace" "loki" {
   }
 }
 
+data "kustomization" "loki" {
+  path = "manifests/loki/base"
+}
+
+resource "kustomization_resource" "loki" {
+  for_each = data.kustomization.loki.ids
+
+  manifest = data.kustomization.loki.manifests[each.value]
+}
+
 resource "helm_release" "loki" {
   name       = "loki"
   repository = "https://grafana.github.io/loki/charts"
