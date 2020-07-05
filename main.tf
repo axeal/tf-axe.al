@@ -317,6 +317,11 @@ resource "helm_release" "prometheus-operator" {
     value = "/prometheus"
   }
 
+  set {
+    name  = "prometheus.ingress.tls[0].hosts[0]"
+    value = "axe.al"
+  }
+
   set_string {
     name  = "grafana.grafana\\.ini.server.root_url"
     value = "https://${var.cloudflare_record_name}/grafana"
