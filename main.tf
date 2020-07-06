@@ -404,7 +404,7 @@ resource "helm_release" "prometheus-operator" {
 
   set {
     name  = "grafana.additionalDataSources[0].url"
-    value = "http://loki.loki.svc.cluster.local:3100"
+    value = "http://loki:3100"
   }
 
   set {
