@@ -414,7 +414,7 @@ resource "helm_release" "prometheus-operator" {
 
   set {
     name  = "grafana.additionalDataSources[0].basicAuth"
-    value = "falseype"
+    value = "false"
   }
 }
 
