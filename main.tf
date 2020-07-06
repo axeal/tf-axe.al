@@ -567,4 +567,69 @@ resource "helm_release" "promtail" {
     name  = "serviceMonitor.enabled"
     value = true
   }
+
+  set {
+    name  = "extraScrapeConfigs[0].job_name"
+    value = "journal"
+  }
+
+  set {
+    name  = "extraScrapeConfigs[0].journal.path"
+    value = "/var/log/journal"
+  }
+
+  set {
+    name  = "extraScrapeConfigs[0].journal.max_age"
+    value = "12h"
+  }
+
+  set {
+    name  = "extraScrapeConfigs[0].journal.labels.job"
+    value = "systemd-journal"
+  }
+
+  set {
+    name  = "extraScrapeConfigs[0].relabel_configs[0].source_labels[0]"
+    value = "__journal_systemd_unit"
+  }
+
+  set {
+    name  = "extraScrapeConfigs[0].relabel_configs[0].target_label"
+    value = "unit"
+  }
+
+  set {
+    name  = "extraScrapeConfigs[0].relabel_configs[1].source_labels[0]"
+    value = "__journal_hostname"
+  }
+
+  set {
+    name  = "extraScrapeConfigs[0].relabel_configs[1].target_label"
+    value = "hostname"
+  }
+
+  set {
+    name  = "extraVolumes[0].name"
+    value = "journal"
+  }
+
+  set {
+    name  = "extraVolumes[0].hostPath.path"
+    value = "/var/log/journal"
+  }
+
+  set {
+    name  = "extraVolumeMounts[0].name"
+    value = "journal"
+  }
+
+  set {
+    name  = "extraVolumeMounts[0].mountPath"
+    value = "/var/log/journal"
+  }
+
+  set {
+    name  = "extraVolumeMounts[0].readOnly"
+    value = true
+  }
 }
