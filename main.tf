@@ -255,7 +255,7 @@ resource "helm_release" "oauth2-proxy" {
 
   set {
     name  = "extraArgs.provider"
-    value = "=github"
+    value = "github"
   }
 
   set {
