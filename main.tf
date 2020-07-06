@@ -589,8 +589,8 @@ resource "helm_release" "promtail" {
   }
 
   set {
-    name  = "extraScrapeConfigs[0].relabel_configs[0].source_labels[0]"
-    value = "__journal_systemd_unit"
+    name  = "extraScrapeConfigs[0].relabel_configs[0].source_labels"
+    value = "['__journal_systemd_unit']"
   }
 
   set {
@@ -599,8 +599,8 @@ resource "helm_release" "promtail" {
   }
 
   set {
-    name  = "extraScrapeConfigs[0].relabel_configs[1].source_labels[0]"
-    value = "__journal_hostname"
+    name  = "extraScrapeConfigs[0].relabel_configs[1].source_labels"
+    value = "['__journal_hostname']"
   }
 
   set {
