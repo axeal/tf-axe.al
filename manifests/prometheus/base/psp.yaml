@@ -22,6 +22,7 @@ roleRef:
   kind: Role
   name: loki-psp
 subjects:
-- apiGroup: rbac.authorization.k8s.io
-  kind: Group
-  name: system:serviceaccounts
+- kind: ServiceAccount
+  name: loki
+- kind: ServiceAccount
+  name: promtail

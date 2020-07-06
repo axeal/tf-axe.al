@@ -536,29 +536,18 @@ resource "kubernetes_ingress" "blog_ingress" {
   }
 }
 
-resource "kubernetes_namespace" "loki" {
-  metadata {
-    name = "loki"
-  }
-}
-
-data "kustomization" "loki" {
-  path = "manifests/loki/base"
-}
-
-resource "kustomization_resource" "loki" {
-  for_each = data.kustomization.loki.ids
-
-  manifest = data.kustomization.loki.manifests[each.value]
-}
-
 resource "helm_release" "loki" {
   name       = "loki"
   repository = "https://grafana.github.io/loki/charts"
   chart      = "loki"
   version    = var.loki_version
-  namespace  = "loki"
+  namespace  = "prometheus"
   wait       = false
+
+  set {
+    name  = "serviceMonitor.enabled"
+    value = true
+  }
 }
 
 resource "helm_release" "promtail" {
@@ -566,11 +555,16 @@ resource "helm_release" "promtail" {
   repository = "https://grafana.github.io/loki/charts"
   chart      = "promtail"
   version    = var.promtail_version
-  namespace  = "loki"
+  namespace  = "prometheus"
   wait       = false
 
   set {
     name  = "loki.serviceName"
     value = "loki"
+  }
+
+  set {
+    name  = "serviceMonitor.enabled"
+    value = true
   }
 }
