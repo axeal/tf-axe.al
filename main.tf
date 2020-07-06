@@ -254,18 +254,18 @@ resource "helm_release" "oauth2-proxy" {
   }
 
   set {
-    name  = "extraArgs[0]"
-    value = "--provider=github"
+    name  = "extraArgs.provider"
+    value = "=github"
   }
 
   set {
-    name  = "extraArgs[1]"
-    value = "--whitelist-domain=.axe.al"
+    name  = "extraArgs.whitelist-domain"
+    value = ".axe.al"
   }
 
   set {
-    name  = "extraArgs[2]"
-    value = "--cookie-domain=.axe.al"
+    name  = "extraArgs.cookie-domain"
+    value = ".axe.al"
   }
 
 }
