@@ -154,3 +154,7 @@ variable "loki_version" {
 variable "promtail_version" {
   type = string
 }
+
+variable "oauth2_version" {
+  type = string
+}

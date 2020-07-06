@@ -210,19 +210,6 @@ resource "kubernetes_namespace" "oauth2_proxy" {
   }
 }
 
-resource "kubernetes_secret" "oauth2_proxy" {
-  metadata {
-    name      = "oauth-proxy-secret"
-    namespace = "oauth2-proxy"
-  }
-
-  data = {
-    github-client-id     = var.oauth2_proxy_github_client_id
-    github-client-secret = var.oauth2_proxy_github_client_secret
-    cookie-secret        = var.oauth2_proxy_cookie_secret
-  }
-}
-
 data "kustomization" "oauth2_proxy" {
   path = "manifests/oauth2-proxy/base"
 }
@@ -233,29 +220,54 @@ resource "kustomization_resource" "oauth2_proxy" {
   manifest = data.kustomization.oauth2_proxy.manifests[each.value]
 }
 
-resource "kubernetes_ingress" "oauth2_proxy_ingress" {
-  metadata {
-    name      = "oauth2-proxy"
-    namespace = "oauth2-proxy"
+resource "helm_release" "oauth2-proxy" {
+  name       = "oauth2-proxy"
+  repository = "https://kubernetes-charts.storage.googleapis.com"
+  chart      = "oauth2-proxy"
+  version    = var.oauth2_version
+  namespace  = "oauth2-proxy"
+  wait       = false
+
+  set {
+    name  = "config.clientID"
+    value = var.oauth2_proxy_github_client_id
   }
 
-  spec {
-    rule {
-      host = "auth.axe.al"
-      http {
-        path {
-          backend {
-            service_name = "oauth2-proxy"
-            service_port = 4180
-          }
-          path = "/oauth2"
-        }
-      }
-    }
-    tls {
-      hosts = ["auth.axe.al"]
-    }
+  set {
+    name  = "config.clientSecret"
+    value = var.oauth2_proxy_github_client_secret
   }
+
+  set {
+    name  = "config.cookieSecret"
+    value = var.oauth2_proxy_cookie_secret
+  }
+
+  set {
+    name  = "ingress.enabled"
+    value = true
+  }
+
+  set {
+    name  = "ingress.hosts[0]"
+    value = "auth.axe.al"
+  }
+
+  set {
+    name  = "extraArgs[0]"
+    value = "--provider=github"
+  }
+
+  set {
+    name  = "extraArgs[1]"
+    value = "--whitelist-domain=.axe.al"
+  }
+
+  set {
+    name  = "extraArgs[2]"
+    value = "--cookie-domain=.axe.al"
+  }
+
 }
 
 resource "kubernetes_namespace" "prometheus" {
