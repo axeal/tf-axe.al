@@ -4,4 +4,3 @@ namespace: prometheus
 
 resources:
 - ingress-nginx-dashboards.yaml
-- psp.yaml
