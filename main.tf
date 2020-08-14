@@ -560,6 +560,11 @@ resource "helm_release" "loki" {
     name  = "serviceMonitor.enabled"
     value = true
   }
+
+  set {
+    name  = "persistence.enabled"
+    value = true
+  }
 }
 
 resource "helm_release" "promtail" {
