@@ -557,11 +557,6 @@ resource "helm_release" "loki" {
   wait       = false
 
   set {
-    name  = "image.repository"
-    value = "axeal/loki"
-  }
-
-  set {
     name  = "serviceMonitor.enabled"
     value = true
   }
