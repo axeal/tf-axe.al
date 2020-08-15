@@ -62,14 +62,6 @@ provider "kubernetes" {
   )
 }
 
-provider "kubernetes-alpha" {
-  host  = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].host
-  token = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].token
-  cluster_ca_certificate = base64decode(
-    scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].cluster_ca_certificate
-  )
-}
-
 provider "kustomization" {
   kubeconfig_raw = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].config_file
 }
@@ -257,10 +249,14 @@ resource "helm_release" "flux" {
 
 }
 
-resource "kubernetes_manifest" "flux-crds" {
-  provider = kubernetes-alpha
+data "kustomization" "flux" {
+  path = "manifests/flux/base"
+}
 
-  manifest = yamldecode(file("files/flux-crd.yaml"))
+resource "kustomization_resource" "flux" {
+  for_each = data.kustomization.flux.ids
+
+  manifest = data.kustomization.flux.manifests[each.value]
 }
 
 resource "helm_release" "helm-operator" {
