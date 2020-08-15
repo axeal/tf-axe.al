@@ -268,6 +268,16 @@ resource "helm_release" "oauth2-proxy" {
     value = ".axe.al"
   }
 
+  set {
+    name  = "replicaCount"
+    value = 2
+  }
+
+  set {
+    name  = "podLabels.app.kubernetes.io/name"
+    value = "oauth2-proxy"
+  }
+
 }
 
 resource "kubernetes_namespace" "prometheus" {
