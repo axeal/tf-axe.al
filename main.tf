@@ -237,7 +237,7 @@ resource "helm_release" "flux" {
   name       = "flux"
   repository = "https://charts.fluxcd.io"
   chart      = "flux"
-  version    = 1.4.0
+  version    = "1.4.0"
   namespace  = "flux"
 
   set {
@@ -267,7 +267,7 @@ resource "helm_release" "helm-operator" {
   name       = "helm-operator"
   repository = "https://charts.fluxcd.io"
   chart      = "helm-operator"
-  version    = 1.2.0
+  version    = "1.2.0"
   namespace  = "flux"
 
   set {
