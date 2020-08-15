@@ -202,6 +202,16 @@ resource "helm_release" "ingress-nginx" {
     value = "true"
   }
 
+  set {
+    name  = "resources.requests.cpu"
+    value = "10m"
+  }
+
+  set {
+    name  = "resources.requests.memory"
+    value = "200Mi"
+  }
+  
 }
 
 data "kustomization" "psps" {
