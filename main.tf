@@ -298,6 +298,26 @@ resource "helm_release" "oauth2-proxy" {
     value = "kubernetes.io/hostname"
   }
 
+  set {
+    name  = "resources.requests.cpu"
+    value = "10m"
+  }
+
+  set {
+    name  = "resources.requests.memory"
+    value = "50Mi" 
+  }
+
+  set {
+    name  = "resources.limits.cpu"
+    value = "100m"
+  }
+
+  set {
+    name  = "resources.limits.memory"
+    value = "100Mi"
+  }
+
 }
 
 resource "kubernetes_namespace" "prometheus" {
