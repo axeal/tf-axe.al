@@ -645,6 +645,22 @@ resource "helm_release" "loki" {
     name  = "persistence.enabled"
     value = true
   }
+
+  set {
+    name  = "config.chunk_store_config.max_look_back_period"
+    value = "720h"
+  }
+
+  set {
+    name  = "config.table_manager.retention_deletes_enabled"
+    value = true
+  }
+
+  set {
+    name  = "config.table_manager.retention_period"
+    value = "720h"
+  }
+  
 }
 
 resource "helm_release" "promtail" {
