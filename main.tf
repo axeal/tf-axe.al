@@ -274,7 +274,7 @@ resource "helm_release" "oauth2-proxy" {
   }
 
   set {
-    name  = "podLabels.app.kubernetes.io/name"
+    name  = "podLabels.app\\.kubernetes\\.io/name"
     value = "oauth2-proxy"
   }
 
