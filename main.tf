@@ -278,6 +278,26 @@ resource "helm_release" "oauth2-proxy" {
     value = "oauth2-proxy"
   }
 
+  set {
+    name  = "affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].key"
+    value = "app.kubernetes.io/name"
+  }
+
+  set {
+    name  = "affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].operator"
+    value = "In"
+  }
+
+  set {
+    name  = "affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].values[0]"
+    value = "oauth2-proxy"
+  }
+
+  set {
+    name  = "affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].topologyKey"
+    value = "kubernetes.io/hostname"
+  }
+
 }
 
 resource "kubernetes_namespace" "prometheus" {
