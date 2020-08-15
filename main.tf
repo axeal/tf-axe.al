@@ -276,6 +276,11 @@ resource "helm_release" "helm-operator" {
     value = "true"
   }
 
+  set {
+    name  = "git.ssh.secretName"
+    value = "flux-git-deploy"
+  }
+
 }
 
 data "kustomization" "psps" {
