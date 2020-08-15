@@ -84,6 +84,16 @@ resource "kubernetes_namespace" "ingress-nginx" {
   }
 }
 
+data "kustomization" "ingress_nginx" {
+  path = "manifests/ingress-nginx/base"
+}
+
+resource "kustomization_resource" "ingress_nginx" {
+  for_each = data.kustomization.ingress_nginx.ids
+
+  manifest = data.kustomization.ingress_nginx.manifests[each.value]
+}
+
 resource "tls_private_key" "cloudflare_origin_ca" {
   algorithm = var.cloudflare_origin_ca_key_algorithm
 }
