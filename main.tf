@@ -480,6 +480,16 @@ resource "helm_release" "prometheus-operator" {
   }
 
   set {
+    name  = "prometheus.prometheusSpec.resources.requests.cpu"
+    value = "1"
+  }
+
+  set {
+    name  = "prometheus.prometheusSpec.resources.requests.memory"
+    value = "2Gi"
+  }
+
+  set {
     name  = "grafana.additionalDataSources[0].name"
     value = "Loki"
   }
@@ -660,7 +670,7 @@ resource "helm_release" "loki" {
     name  = "config.table_manager.retention_period"
     value = "720h"
   }
-  
+
 }
 
 resource "helm_release" "promtail" {
