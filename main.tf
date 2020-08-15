@@ -158,22 +158,27 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].key"
+    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight"
+    value = "100"
+  }
+
+  set {
+    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key"
     value = "app.kubernetes.io/name"
   }
 
   set {
-    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].operator"
+    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator"
     value = "In"
   }
 
   set {
-    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].values[0]"
+    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0]"
     value = "ingress-nginx"
   }
 
   set {
-    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].topologyKey"    
+    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey"    
     value = "kubernetes.io/hostname"
   }
 
@@ -211,7 +216,7 @@ resource "helm_release" "ingress-nginx" {
     name  = "resources.requests.memory"
     value = "200Mi"
   }
-  
+
 }
 
 data "kustomization" "psps" {
@@ -299,22 +304,27 @@ resource "helm_release" "oauth2-proxy" {
   }
 
   set {
-    name  = "affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].key"
+    name  = "affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].weight"
+    value = "100"
+  }
+
+  set {
+    name  = "affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].key"
     value = "app.kubernetes.io/name"
   }
 
   set {
-    name  = "affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].operator"
+    name  = "affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].operator"
     value = "In"
   }
 
   set {
-    name  = "affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].values[0]"
+    name  = "affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.labelSelector.matchExpressions[0].values[0]"
     value = "oauth2-proxy"
   }
 
   set {
-    name  = "affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].topologyKey"
+    name  = "affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey"
     value = "kubernetes.io/hostname"
   }
 
