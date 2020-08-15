@@ -62,6 +62,14 @@ provider "kubernetes" {
   )
 }
 
+provider "kubernetes-alpha" {
+  host  = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].host
+  token = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].token
+  cluster_ca_certificate = base64decode(
+    scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].cluster_ca_certificate
+  )
+}
+
 provider "kustomization" {
   kubeconfig_raw = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].config_file
 }
@@ -178,7 +186,7 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey"    
+    name  = "controller.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey"
     value = "kubernetes.io/hostname"
   }
 
@@ -215,6 +223,61 @@ resource "helm_release" "ingress-nginx" {
   set {
     name  = "controller.resources.requests.memory"
     value = "200Mi"
+  }
+
+}
+
+resource "kubernetes_namespace" "flux" {
+  metadata {
+    name = "flux"
+  }
+}
+
+resource "helm_release" "flux" {
+  name       = "flux"
+  repository = "https://charts.fluxcd.io"
+  chart      = "flux"
+  version    = 1.4.0
+  namespace  = "flux"
+
+  set {
+    name  = "git.url"
+    value = "git@github.com:axeal/manifests"
+  }
+
+  set {
+    name  = "git.path"
+    value = "clusters/axe.al"
+  }
+
+  set {
+    name  = "rbac.pspEnabled"
+    value = "true"
+  }
+
+}
+
+resource "kubernetes_manifest" "flux-crds" {
+  provider = kubernetes-alpha
+
+  manifest = yamldecode(file("files/flux-crd.yaml"))
+}
+
+resource "helm_release" "helm-operator" {
+  name       = "helm-operator"
+  repository = "https://charts.fluxcd.io"
+  chart      = "helm-operator"
+  version    = 1.2.0
+  namespace  = "flux"
+
+  set {
+    name  = "helm.versions"
+    value = "v3"
+  }
+
+  set {
+    name  = "rbac.pspEnabled"
+    value = "true"
   }
 
 }
@@ -335,7 +398,7 @@ resource "helm_release" "oauth2-proxy" {
 
   set {
     name  = "resources.requests.memory"
-    value = "50Mi" 
+    value = "50Mi"
   }
 
   set {
