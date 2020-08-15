@@ -4,3 +4,4 @@ namespace: oauth2-proxy
 
 resources:
 - psp.yaml
+- vpa.yaml
