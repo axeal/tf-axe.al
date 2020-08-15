@@ -658,7 +658,7 @@ resource "helm_release" "loki" {
 
   set {
     name  = "config.chunk_store_config.max_look_back_period"
-    value = "720h"
+    value = "672h"
   }
 
   set {
@@ -668,7 +668,7 @@ resource "helm_release" "loki" {
 
   set {
     name  = "config.table_manager.retention_period"
-    value = "720h"
+    value = "672h"
   }
 
 }
