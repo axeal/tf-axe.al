@@ -208,12 +208,12 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "resources.requests.cpu"
+    name  = "controller.resources.requests.cpu"
     value = "10m"
   }
 
   set {
-    name  = "resources.requests.memory"
+    name  = "controller.resources.requests.memory"
     value = "200Mi"
   }
 
