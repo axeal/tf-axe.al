@@ -481,7 +481,7 @@ resource "helm_release" "prometheus-operator" {
 
   set {
     name  = "prometheus.prometheusSpec.resources.requests.cpu"
-    value = "1"
+    value = "1000m"
   }
 
   set {
