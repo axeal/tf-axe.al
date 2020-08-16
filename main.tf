@@ -80,7 +80,7 @@ resource "kubernetes_namespace" "ingress-nginx" {
 
 data "cloudflare_ip_ranges" "cloudflare" {}
 
-data "kubernetes_service" "ingress-nginx-controller" {
+resource "kubernetes_service" "ingress-nginx-controller" {
   metadata {
     name      = "ingress-nginx-controller"
     namespace = "ingress-nginx"
