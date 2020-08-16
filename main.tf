@@ -75,6 +75,19 @@ provider "helm" {
 resource "kubernetes_namespace" "ingress-nginx" {
   metadata {
     name = "ingress-nginx"
+    annotations = {
+      "fluxcd.io/sync-checksum" = ""
+    }
+    labels = {
+      "fluxcd.io/sync-gc-mark" = ""
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations["fluxcd.io/sync-checksum"],
+      metadata[0].labels["fluxcd.io/sync-gc-mark"]
+    ]
   }
 }
 
@@ -85,7 +98,7 @@ resource "kubernetes_service" "ingress-nginx-controller" {
     name      = "ingress-nginx-controller"
     namespace = "ingress-nginx"
     labels = {
-      "k8s.scaleway.com/cluster"                                      = split("/",scaleway_k8s_cluster_beta.k8s-cluster.id)[1]
+      "k8s.scaleway.com/cluster"                                      = split("/", scaleway_k8s_cluster_beta.k8s-cluster.id)[1]
       "k8s.scaleway.com/kapsule"                                      = ""
       "k8s.scaleway.com/managed-by-scaleway-cloud-controller-manager" = ""
     }
@@ -122,6 +135,19 @@ resource "kubernetes_service" "ingress-nginx-controller" {
 resource "kubernetes_namespace" "flux" {
   metadata {
     name = "flux"
+    annotations = {
+      "fluxcd.io/sync-checksum" = ""
+    }
+    labels = {
+      "fluxcd.io/sync-gc-mark" = ""
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      metadata[0].annotations["fluxcd.io/sync-checksum"],
+      metadata[0].labels["fluxcd.io/sync-gc-mark"]
+    ]
   }
 }
 
