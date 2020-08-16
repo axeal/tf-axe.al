@@ -143,6 +143,11 @@ resource "helm_release" "flux" {
   }
 
   set {
+    name  = "syncGarbageCollection.enabled"
+    value = "true"
+  }
+
+  set {
     name  = "prometheus.enabled"
     value = "true"
   }
