@@ -196,6 +196,11 @@ resource "helm_release" "flux" {
     name  = "prometheus.serviceMonitor.namespace"
     value = "prometheus"
   }
+
+  set {
+    name  = "dashboard.enabled"
+    value = "true"
+  }
 }
 
 resource "helm_release" "helm-operator" {
