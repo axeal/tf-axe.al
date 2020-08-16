@@ -159,12 +159,12 @@ resource "helm_release" "flux" {
 
   set {
     name  = "git.url"
-    value = "git@github.com:axeal/manifests"
+    value = "https://github.com/axeal/manifests.git"
   }
 
   set {
-    name  = "git.path"
-    value = "clusters/axe.al"
+    name  = "git.readonly"
+    value = "true"
   }
 
   set {
@@ -208,11 +208,6 @@ resource "helm_release" "helm-operator" {
   set {
     name  = "rbac.pspEnabled"
     value = "true"
-  }
-
-  set {
-    name  = "git.ssh.secretName"
-    value = "flux-git-deploy"
   }
 
   set {
