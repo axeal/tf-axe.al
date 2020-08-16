@@ -198,7 +198,7 @@ resource "helm_release" "flux" {
   }
 
   set {
-    name  = "dashboard.enabled"
+    name  = "dashboards.enabled"
     value = "true"
   }
 }
