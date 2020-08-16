@@ -60,6 +60,10 @@ provider "kubernetes" {
   )
 }
 
+provider "kustomization" {
+  kubeconfig_raw = scaleway_k8s_cluster_beta.k8s-cluster.kubeconfig[0].config_file
+}
+
 provider "helm" {
   kubernetes {
     load_config_file = "false"
