@@ -93,17 +93,17 @@ data "kubernetes_service" "ingress-nginx-controller" {
     load_balancer_source_ranges = data.cloudflare_ip_ranges.cloudflare.ipv4_cidr_blocks
 
     port {
-      name        = http
+      name        = "http"
       port        = 80
-      protocol    = TCP
-      target_port = http
+      protocol    = "TCP"
+      target_port = "http"
     }
 
     port {
-      name        = https
+      name        = "https"
       port        = 443
-      protocol    = TCP
-      target_port = https
+      protocol    = "TCP"
+      target_port = "https"
     }
 
     selector = {
