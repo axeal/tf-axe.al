@@ -163,6 +163,11 @@ resource "helm_release" "flux" {
   }
 
   set {
+    name  = "git.path"
+    value = "clusters/axe.al"
+  }
+
+  set {
     name  = "git.readonly"
     value = "true"
   }
