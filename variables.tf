@@ -24,17 +24,13 @@ variable "cloudflare_api_token" {
   type = string
 }
 
-variable "cloudflare_api_user_service_key" {
-  type = string
-}
-
 variable "scaleway_cluster_name" {
   type = string
 }
 
 variable "scaleway_k8s_version" {
   type    = string
-  default = "1.18.3"
+  default = "1.18.8"
 }
 
 variable "scaleway_cni" {
@@ -44,7 +40,7 @@ variable "scaleway_cni" {
 
 variable "scaleway_ingress" {
   type    = string
-  default = "nginx"
+  default = "none"
 }
 
 variable "scaleway_admission_plugins" {
@@ -91,70 +87,5 @@ variable "cloudflare_zone_id" {
 }
 
 variable "cloudflare_record_name" {
-  type = string
-}
-
-variable "cloudflare_origin_ca_key_algorithm" {
-  type    = string
-  default = "RSA"
-}
-
-variable "cloudflare_origin_ca_hostnames" {
-  type = list(string)
-}
-
-variable "ingress_nginx_version" {
-  type = string
-}
-
-variable "prometheus_operator_version" {
-  type = string
-}
-
-variable "vpa_webhook_ca_key_algorithm" {
-  type    = string
-  default = "RSA"
-}
-
-variable "vpa_webhook_server_key_algorithm" {
-  type    = string
-  default = "RSA"
-}
-
-variable "vpa_webhook_ca_cert_validity_period" {
-  type    = number
-  default = 8760
-}
-
-variable "vpa_webhook_server_cert_validity_period" {
-  type    = number
-  default = 8760
-}
-
-variable "auth_prefix" {
-  type = string
-}
-
-variable "oauth2_proxy_github_client_id" {
-  type = string
-}
-
-variable "oauth2_proxy_github_client_secret" {
-  type = string
-}
-
-variable "oauth2_proxy_cookie_secret" {
-  type = string
-}
-
-variable "loki_version" {
-  type = string
-}
-
-variable "promtail_version" {
-  type = string
-}
-
-variable "oauth2_version" {
   type = string
 }
