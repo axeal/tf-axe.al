@@ -141,6 +141,21 @@ resource "helm_release" "flux" {
     name  = "rbac.pspEnabled"
     value = "true"
   }
+
+  set {
+    name  = "prometheus.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "prometheus.serviceMonitor.create"
+    value = "true"
+  }
+
+  set {
+    name  = "prometheus.serviceMonitor.namespace"
+    value = "prometheus"
+  }
 }
 
 resource "helm_release" "helm-operator" {
@@ -163,5 +178,20 @@ resource "helm_release" "helm-operator" {
   set {
     name  = "git.ssh.secretName"
     value = "flux-git-deploy"
+  }
+
+  set {
+    name  = "prometheus.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "prometheus.serviceMonitor.create"
+    value = "true"
+  }
+
+  set {
+    name  = "prometheus.serviceMonitor.namespace"
+    value = "prometheus"
   }
 }
