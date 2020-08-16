@@ -112,7 +112,7 @@ resource "kubernetes_service" "ingress-nginx-controller" {
 
     selector = {
       "app.kubernetes.io/component" = "controller"
-      "app.kubernetes.io/instance " = "ingress-nginx"
+      "app.kubernetes.io/instance"  = "ingress-nginx"
       "app.kubernetes.io/name"      = "ingress-nginx"
     }
   }
