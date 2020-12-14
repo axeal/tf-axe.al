@@ -3,19 +3,15 @@ terraform {
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "2.9.0"
-    }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "1.2.4"
+      version = "2.14.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "1.12.0"
+      version = "1.13.3"
     }
     scaleway = {
       source  = "scaleway/scaleway"
-      version = "1.16.0"
+      version = "1.17.2"
     }
   }
 }
