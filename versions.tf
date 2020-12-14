@@ -13,5 +13,17 @@ terraform {
       source  = "scaleway/scaleway"
       version = "1.17.2"
     }
+    flux = {
+      source  = "fluxcd/flux"
+      version = "0.0.6"
+    }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "1.9.4"
+    }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "3.0.0"
+    }
   }
 }
