@@ -74,18 +74,11 @@ provider "helm" {
 resource "kubernetes_namespace" "ingress-nginx" {
   metadata {
     name = "ingress-nginx"
-    annotations = {
-      "fluxcd.io/sync-checksum" = ""
-    }
-    labels = {
-      "fluxcd.io/sync-gc-mark" = ""
-    }
   }
 
   lifecycle {
     ignore_changes = [
-      metadata[0].annotations["fluxcd.io/sync-checksum"],
-      metadata[0].labels["fluxcd.io/sync-gc-mark"]
+      metadata[0].labels
     ]
   }
 }
