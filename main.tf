@@ -117,7 +117,7 @@ data "flux_install" "main" {
 }
 
 data "flux_sync" "main" {
-  target_path = var.flux-target-path
+  target_path = var.flux_target_path
   url         = "ssh://git@github.com/${var.flux_github_owner}/${var.flux_github_repo}.git"
   name        = "${var.flux_github_owner}-${var.flux_github_repo}"
   branch      = "master"
