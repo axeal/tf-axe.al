@@ -162,3 +162,16 @@ resource "kustomization_resource" "flux" {
 
   depends_on = [ kubernetes_namespace.flux-system ]
 }
+
+data "kustomization_build" "flux-sync" {
+  path = "flux-sync"
+}
+
+resource "kustomization_resource" "flux-sync" {
+  for_each = data.kustomization_build.flux-sync.ids
+
+  manifest = data.kustomization_build.flux-sync.manifests[each.value]
+
+  depends_on = [ kubernetes_namespace.flux-system, kustomization_resource.flux ]
+}
+
