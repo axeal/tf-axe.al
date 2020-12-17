@@ -89,7 +89,7 @@ data "cloudflare_ip_ranges" "cloudflare" {}
 resource "kubernetes_service" "ingress-nginx-controller" {
   metadata {
     name      = "ingress-nginx-controller"
-    namespace = "ingress-nginx"
+    namespace = kubernetes_namespace.ingress-nginx.metadata[0].name
     labels = {
       "k8s.scaleway.com/cluster"                                      = split("/", scaleway_k8s_cluster_beta.k8s-cluster.id)[1]
       "k8s.scaleway.com/kapsule"                                      = ""
