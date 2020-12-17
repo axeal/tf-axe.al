@@ -59,8 +59,8 @@ provider "kubernetes" {
   )
 }
 
-# Scaleway Kubernetes API Endpoint not available immediately after cluster creation
-resource "time_sleep" "wait_30_seconds" {
+# Need to wait for DNS propagation of Kubernetes API endpoint record
+resource "time_sleep" "wait_60_seconds" {
   depends_on = [scaleway_k8s_cluster_beta.k8s-cluster]
 
   create_duration = "60s"
@@ -81,7 +81,7 @@ resource "kubernetes_namespace" "ingress-nginx" {
     ]
   }
 
-  depends_on = [time_sleep.wait_30_seconds, scaleway_k8s_pool_beta.k8s-pool-0]
+  depends_on = [time_sleep.wait_60_seconds, scaleway_k8s_pool_beta.k8s-pool-0]
 }
 
 data "cloudflare_ip_ranges" "cloudflare" {}
@@ -136,7 +136,7 @@ resource "kubernetes_namespace" "flux-system" {
     ]
   }
 
-  depends_on = [time_sleep.wait_30_seconds, scaleway_k8s_pool_beta.k8s-pool-0]
+  depends_on = [time_sleep.wait_60_seconds, scaleway_k8s_pool_beta.k8s-pool-0]
 }
 
 data "kustomization_build" "flux" {
