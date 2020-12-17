@@ -136,4 +136,6 @@ resource "kustomization_resource" "flux" {
   for_each = data.kustomization_build.flux.ids
 
   manifest = data.kustomization_build.flux.manifests[each.value]
+
+  depends_on = [ kubernetes_namespace.flux-system ]
 }
