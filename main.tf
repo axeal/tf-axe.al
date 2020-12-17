@@ -63,7 +63,7 @@ provider "kubernetes" {
 resource "time_sleep" "wait_30_seconds" {
   depends_on = [scaleway_k8s_cluster_beta.k8s-cluster]
 
-  create_duration = "30s"
+  create_duration = "60s"
 }
 
 provider "kustomization" {
