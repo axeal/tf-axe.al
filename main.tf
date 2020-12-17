@@ -81,7 +81,7 @@ resource "kubernetes_namespace" "ingress-nginx" {
     ]
   }
 
-  depends_on = [time_sleep.wait_30_seconds]
+  depends_on = [time_sleep.wait_30_seconds, scaleway_k8s_pool_beta.k8s-pool-0]
 }
 
 data "cloudflare_ip_ranges" "cloudflare" {}
@@ -136,7 +136,7 @@ resource "kubernetes_namespace" "flux-system" {
     ]
   }
 
-  depends_on = [time_sleep.wait_30_seconds]
+  depends_on = [time_sleep.wait_30_seconds, scaleway_k8s_pool_beta.k8s-pool-0]
 }
 
 data "kustomization_build" "flux" {
