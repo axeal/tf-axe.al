@@ -160,7 +160,7 @@ resource "kustomization_resource" "flux" {
 
   manifest = data.kustomization_build.flux.manifests[each.value]
 
-  depends_on = [ kubernetes_namespace.flux-system ]
+  depends_on = [kubernetes_namespace.flux-system]
 }
 
 data "kustomization_build" "flux-sync" {
@@ -172,6 +172,6 @@ resource "kustomization_resource" "flux-sync" {
 
   manifest = data.kustomization_build.flux-sync.manifests[each.value]
 
-  depends_on = [ kubernetes_namespace.flux-system, kustomization_resource.flux ]
+  depends_on = [kubernetes_namespace.flux-system, kustomization_resource.flux]
 }
 
