@@ -82,14 +82,6 @@ variable "scaleway_pool_autohealing" {
   default = true
 }
 
-variable "cloudflare_zone_id" {
-  type = string
-}
-
-variable "cloudflare_record_name" {
-  type = string
-}
-
 variable "flux_target_path" {
   type = string
 }
