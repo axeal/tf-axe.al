@@ -20,3 +20,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: manifests
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
