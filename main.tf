@@ -117,18 +117,6 @@ resource "kubernetes_service" "ingress-nginx-controller" {
   }
 }
 
-data "kustomization_build" "sealed-secrets" {
-  path = "sealed-secrets"
-}
-
-resource "kustomization_resource" "sealed-secrets" {
-  for_each = data.kustomization_build.sealed-secrets.ids
-
-  manifest = data.kustomization_build.sealed-secrets.manifests[each.value]
-
-  depends_on = [time_sleep.wait_60_seconds, scaleway_k8s_pool_beta.k8s-pool-0]
-}
-
 resource "kubernetes_namespace" "flux-system" {
   metadata {
     name = "flux-system"
