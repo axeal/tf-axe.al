@@ -17,5 +17,9 @@ terraform {
       source  = "kbst/kustomization"
       version = "0.3.0"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = "0.6.0"
+    }
   }
 }
