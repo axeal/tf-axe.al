@@ -151,6 +151,17 @@ resource "kubernetes_namespace" "flux-system" {
   depends_on = [time_sleep.wait_60_seconds, scaleway_k8s_pool_beta.k8s-pool-0]
 }
 
+resource "kubernetes_secret" "sops-gpg" {
+  metadata {
+    name      = "sops-gpg"
+    namespace = kubernetes_namespace.flux-system.metadata[0].name
+  }
+
+  data = {
+    "sops.asc" = var.gpg_key
+  }
+}
+
 data "kustomization_build" "flux" {
   path = "flux/install"
 }

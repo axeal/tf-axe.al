@@ -101,3 +101,7 @@ variable "flux_github_owner" {
 variable "flux_github_repo" {
   type = string
 }
+
+variable "gpg_key" {
+  type = string
+}
