@@ -6,7 +6,7 @@ variable "scaleway_secret_key" {
   type = string
 }
 
-variable "scaleway_organization_id" {
+variable "scaleway_project_id" {
   type = string
 }
 
@@ -30,22 +30,12 @@ variable "scaleway_cluster_name" {
 
 variable "scaleway_k8s_version" {
   type    = string
-  default = "1.18.8"
+  default = "1.20.5"
 }
 
 variable "scaleway_cni" {
   type    = string
   default = "cilium"
-}
-
-variable "scaleway_ingress" {
-  type    = string
-  default = "none"
-}
-
-variable "scaleway_admission_plugins" {
-  type    = list(string)
-  default = []
 }
 
 variable "scaleway_pool_name" {

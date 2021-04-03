@@ -11,7 +11,7 @@ terraform {
     }
     scaleway = {
       source  = "scaleway/scaleway"
-      version = "1.17.2"
+      version = "2.0.0"
     }
     kustomization = {
       source  = "kbst/kustomization"
