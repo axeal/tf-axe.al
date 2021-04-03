@@ -40,8 +40,6 @@ resource "scaleway_k8s_pool" "k8s-pool-0" {
 resource "scaleway_lb_ip" "nginx_ingress" {}
 
 provider "kubernetes" {
-  load_config_file = "false"
-
   host  = scaleway_k8s_cluster.k8s-cluster.kubeconfig[0].host
   token = scaleway_k8s_cluster.k8s-cluster.kubeconfig[0].token
   cluster_ca_certificate = base64decode(
